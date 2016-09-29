@@ -1,0 +1,53 @@
+{
+  "prompts": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "label": "Project name"
+    },
+    "description": {
+      "type": "string",
+      "required": true,
+      "label": "Project description",
+      "default": "A Vue.js project"
+    },
+    "author": {
+      "type": "string",
+      "label": "Author"
+    },
+    "private": {
+      "type": "boolean",
+      "default": true
+    },
+    "build": {
+      "type": "list",
+      "message": "Vue comes in two build versions, which do you want to use?",
+      "choices": [
+        {
+          "name": "Runtime-only: lighter, but no support for templates defined in .html files (.vue files are fine)",
+          "value": "runtime",
+          "short": "tuntime"
+        },
+        {
+          "name": "Standalone: heavier, because it includes the template parser to allow templates in .html files",
+          "value": "standalone",
+          "short": "standalone"
+        }
+      ]
+    },
+    "lint": {
+      "type": "confirm",
+      "message": "Use ESLint to lint your code?"
+    },
+    "unit": {
+      "type": "confirm",
+      "message": "Setup unit tests with Karma + Mocha?"
+    }
+  },
+  "filters": {
+    ".eslintrc.js": "lint",
+    "test/unit/**/*": "unit",
+    "test/e2e/**/*": "e2e"
+  },
+  "completeMessage": "To get started:\n\n  cd {{destDirName}}\n  npm install\n  npm run dev"
+}
