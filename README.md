@@ -1,4 +1,4 @@
-#NPM install browserify相关说明
+#NPM install browserify相关
 需要已安装好npm管理器
 
     npm install -g vue-cli
