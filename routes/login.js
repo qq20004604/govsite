@@ -3,6 +3,22 @@ var router = express.Router();  // 调用模块的Router方法
 var db = require('../models/db');
 
 router.post('/', function (req, res, next) {    //当路由捕捉到url为/reg的post请求时，会执行以下函数
+    //如果是已登录，则自动登录
+    if ('user' in req.session && req.session.user) {
+        return res.send({
+            code: 200,
+            data: {
+                username: req.session.username
+            }
+        });
+    }
+    //如果不是，则查看请求内容，如果是查询是否已登录，则返回未登录
+    else if ('haveLogined' in req.body) {
+        return res.send({
+            code: 500,
+            data: "have not logined"
+        });
+    }
     var newUser = new User(req.body);
     newUser.get(function (err, user) {
         if (user) { //说明有用户

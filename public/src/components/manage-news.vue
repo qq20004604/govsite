@@ -1,11 +1,11 @@
 <template>
     <div class="col-md-12 main">
         <div class="btn-group btn-group-lg editnews">
-            <button type="button" class="btn btn-primary">创建新闻</button>
-            <button type="button" class="btn btn-danger">删除新闻</button>
+            <button type="button" class="btn btn-primary" @click="setEditStatus('edit')">创建新闻</button>
+            <button type="button" class="btn btn-danger" @click="setEditStatus('')">删除新闻</button>
         </div>
-        <create-news></create-news>
-        <delete-news></delete-news>
+        <create-news v-if="editStatus=='edit'"></create-news>
+        <delete-news v-else></delete-news>
     </div>
 </template>
 <style>
@@ -17,7 +17,7 @@
         -webkit-border-bottom-right-radius: 5px;
     }
 
-    .editnews{
+    .editnews {
         margin: 20px 0;
     }
 
@@ -27,11 +27,16 @@
     import deleteNews from './delete-news.vue'
     export default{
         data(){
-            return{
-                msg:'hello vue'
+            return {
+                editStatus: 'edit'
             }
         },
-        components:{
+        methods: {
+            setEditStatus: function (str) {
+                this.editStatus = str;
+            }
+        },
+        components: {
             'create-news': createNews,
             'delete-news': deleteNews
         }

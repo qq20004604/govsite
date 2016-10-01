@@ -3,7 +3,7 @@
         <div class="background-image container"></div>
         <main-top></main-top>
         <login-dialog v-if="state=='login'">12321</login-dialog>
-        <post-news v-if="state=='already'"></post-news>
+        <manage-news v-if="state=='already'"></manage-news>
         <template v-if="state==''">
             <main-container></main-container>
             <main-foot></main-foot>
@@ -15,7 +15,7 @@
     import mainContainer from './components/main-container.vue'
     import mainFoot from './components/main-foot.vue'
     import login from './components/login.vue'
-    import postNews from './components/post-news.vue'
+    import manageNews from './components/manage-news.vue'
 
     export default {
         data(){
@@ -28,7 +28,7 @@
             'main-container': mainContainer,
             'main-foot': mainFoot,
             'login-dialog': login,
-            'post-news': postNews
+            'manage-news': manageNews
         }
     }
 </script>
