@@ -2,18 +2,20 @@
     <div class="background">
         <div class="row">
             <div class="col-md-12">
-                <div v-if="error">
+                <button v-if="canRefresh" @click="refresh">点击刷新，重新加载</button>
+                <div v-else>刷新中……</div>
+                <div v-if="error=='error'" class="alert alert-danger">
                     新闻加载失败
-                    <button v-if="canRefresh" @click="refresh">点击刷新，重新加载</button>
-                    <div v-else>刷新中……</div>
                 </div>
-                <ul v-else>
+                <div v-if="error=='noMoreNews'" class="alert alert-info">
+                    没有更多新闻了
+                </div>
+                <ul v-if="error==''">
                     <template v-for="item in news">
                         <p>
                             <span>【{{item.type}}】</span>
-                            <span class="text title">[{{item.title}}]</span>
-
-                            <span class="float-right">删除新闻</span>
+                            <span class="text title">{{item.title}}</span>
+                            <span class="float-right" @click="deleteNews(item.Id)">删除新闻</span>
                         </p>
                     </template>
                 </ul>
@@ -55,7 +57,7 @@
     export default{
         data(){
             return {
-                error: false,
+                error: '',
                 canRefresh: true,
                 news: []
             }
@@ -71,9 +73,11 @@
                     type: "get",
                     dataType: "json"
                 }).done(function (result) {
-                    console.log(result);
-                    if (result.code !== 200) {
-                        self.error = true;
+                    if (result.code === 501) {
+                        self.error = 'noMoreNews';
+                        return;
+                    } else if (result.code !== 200) {
+                        self.error = 'error';
                     } else {
                         self.news = result.data;
                     }
@@ -89,6 +93,27 @@
                     self.canRefresh = true;
                 }, 3000);
                 this.loadNews();
+            },
+            deleteNews: function (id) {
+                var self = this;
+                $.ajax({
+                    url: "/deletenews",
+                    type: "delete",
+                    dataType: "json",
+                    data: {id: id}
+                }).done(function (result) {
+                    if (result.code === 200) {
+                        var id = parseInt(result.data);
+                        self.news.forEach(function (item, index) {
+                            if (item.Id == id) {
+                                self.news.splice(index, 1);
+                            }
+                        })
+                        if (self.news.length === 0) {
+                            self.refresh();
+                        }
+                    }
+                })
             }
         },
         components: {

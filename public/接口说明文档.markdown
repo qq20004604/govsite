@@ -1,0 +1,88 @@
+#接口文档
+
+
+##main-top.vue    接口
+url
+
+    /getVisitsNumber
+    
+type
+
+    GET
+
+data
+
+    {
+        "data": 123
+    }
+    
+    123是访问人数，类型是Number。
+    当出错时，data的值是字符串"未能获取已访问人数"
+  
+
+##login.vue    接口
+url
+
+    /login
+    
+type
+
+    POST
+    
+data
+
+    发送
+    {
+        username: this.account,
+        userpassword: this.password
+    }
+    
+    返回
+    见状态码
+    
+##create-news.vue    接口
+url
+
+    /postnews
+    
+type
+
+    POST
+    
+data
+
+    发送
+    {
+        type: self.type,
+        title: self.title,
+        text: self.text,
+        editor: self.$root.user
+    }
+    
+    返回
+    见状态码
+    
+##delete-news.vue    接口
+url
+
+    /deletenews
+    
+type
+
+    DELETE
+    
+data
+
+    发送
+    {
+        id:xxx
+    }
+    
+    id属性类型：number
+    
+    返回
+    code:200    正常
+    code:500    删除失败
+    
+
+    

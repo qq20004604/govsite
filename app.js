@@ -40,7 +40,9 @@ app.use('/postnews', postnews);
 //查询新闻
 var loadnews = require("./routes/loadNews");
 app.use('/loadnews', loadnews);
-
+//删除新闻
+var deletenews = require("./routes/deleteNews");
+app.use('/deletenews', deletenews);
 
 
 // catch 404 and forward to error handler
