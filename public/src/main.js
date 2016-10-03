@@ -8,6 +8,11 @@ global.jQuery = require('jquery');
 global.$ = global.jQuery;
 require('bootstrap');
 
+Vue.filter("formatTime", function (value) {
+    var date = new Date(value);
+    return date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate() + '　' + date.getHours() + ':' + date.getMinutes() + ':' + date.getSeconds();
+})
+
 new Vue({ // eslint-disable-line no-new
   el: '#app',
   render: (h) => h(App)

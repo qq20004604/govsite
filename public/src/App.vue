@@ -2,11 +2,15 @@
     <div id="app" class="container">
         <div class="background-image container"></div>
         <main-top></main-top>
-        <login-dialog v-if="state=='login'">12321</login-dialog>
-        <manage-news v-if="state=='already'"></manage-news>
-        <template v-if="state==''">
-            <main-container></main-container>
-            <main-foot></main-foot>
+        <!--新闻查看，页面之所以这样写，是为了方便在新闻隐藏后切换回原页面-->
+        <news-view v-if="newsview"></news-view>
+        <template v-else>
+            <login-dialog v-if="state=='login'">12321</login-dialog>
+            <manage-news v-if="state=='already'"></manage-news>
+            <template v-if="state==''">
+                <main-container></main-container>
+                <main-foot></main-foot>
+            </template>
         </template>
     </div>
 </template>
@@ -16,11 +20,13 @@
     import mainFoot from './components/main-foot.vue'
     import login from './components/login.vue'
     import manageNews from './components/manage-news.vue'
+    import newsView from './components/news-view.vue'
 
     export default {
         data(){
             return {
-                state: ""
+                state: "",
+                newsview: false
             }
         },
         components: {
@@ -28,7 +34,8 @@
             'main-container': mainContainer,
             'main-foot': mainFoot,
             'login-dialog': login,
-            'manage-news': manageNews
+            'manage-news': manageNews,
+            'news-view': newsView
         }
     }
 </script>

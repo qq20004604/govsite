@@ -105,7 +105,7 @@
                     if (result.code === 200) {
                         var id = parseInt(result.data);
                         self.news.forEach(function (item, index) {
-                            if (item.Id == id) {
+                            if (item.id == id) {
                                 self.news.splice(index, 1);
                             }
                         })

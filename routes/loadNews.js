@@ -4,21 +4,53 @@ var db = require('../models/db');   // 调用刚才封装好的user类
 
 
 router.get('/', function (req, res, next) {    //当路由捕捉到url为/loadnews的get请求时，会执行以下函数
+    //  有id则查询指定id新闻
     //  有type时添加type查询语句；
     //  没有type时，则不添加type（无类型限制）；
     //  有number属性时，类型不符或者没有，则每次查询5个；大于20或小于0，则查询20个；0~20之间，取其整数作为查询条件
 
+    //由于查询字符串拼接是跟ajax收到信息间接相关，因此安全性是ok的。另外，nodejs的mysql模块默认禁止将多个查询语句拼接到一起
+    //  使用id时只能查询到一个
+    var str = 'select * from news';
+    //  首先判断是否有id，有则处理之
+    if (req.query.id && Number(req.query.id) > 0) {
+        str += ' where Id = ?';
+        LoadNews(str, [req.query.id], function (err, result) {
+            if (result) { //如果第二个参数存在，说明用户名重复了，返回提示
+                //需要对结果进行处理
+                var resData = dealWithResult(result, true); //根据id查询会获取正文
+                return res.send({
+                    code: 200,
+                    data: resData
+                });
+            }
+            if (err) {  //如果报错，返回报错信息
+                console.log(err);
+                return res.send({
+                    code: 500,
+                    data: "error server"
+                });
+            }
+            return res.send({
+                code: 501,
+                data: "no more things"
+            })
+        });
+        return;
+    }
+
+    //  其次判断查询个数，获取查询个数
     var number = null;
     //console.log(req.query);   //这个是url中，问号后面拼接出来的对象
     if (!req.query.number || typeof req.query.number !== 'number') {
         number = 5;
-    } else if (req.query.number > 20 || req.query.number < 0) {
+    } else if (req.query.number > 20 || req.query.number <= 0) {
         number = 20;
     } else {
         number = req.query.number.toFixed(0);
     }
 
-    var str = 'select * from news';
+    //  最后判断类型查询
     var arr = [];
     // console.log(typeof req.query.type);
     //  遍历查询字段语句SHOW FULL FIELDS FROM news;
@@ -35,13 +67,14 @@ router.get('/', function (req, res, next) {    //当路由捕捉到url为/loadne
     arr.push(number);
     // console.log(str);
     // console.log(arr);
-    var load = new LoadNews();
-    load.get(str, arr,
+    LoadNews(str, arr,
         function (err, result) {
             if (result) { //如果第二个参数存在，说明用户名重复了，返回提示
+                //需要对结果进行处理
+                var resData = dealWithResult(result);
                 return res.send({
                     code: 200,
-                    data: result
+                    data: resData
                 });
             }
             if (err) {  //如果报错，返回报错信息
@@ -58,12 +91,9 @@ router.get('/', function (req, res, next) {    //当路由捕捉到url为/loadne
         })
 
 })
-function LoadNews() {       // 这是一个User类，传递的参数是一个对象，这个对象可以具有两个属性，分别是name和password
-
-}
 
 // 模板读取函数
-LoadNews.prototype.get = function (str, arr, callback) {
+function LoadNews(str, arr, callback) {       // 这是一个User类，传递的参数是一个对象，这个对象可以具有两个属性，分别是name和password
     var selectResult;
     db.con(function (connect) {
         connect.query(str, arr, function (err, result) {
@@ -81,4 +111,25 @@ LoadNews.prototype.get = function (str, arr, callback) {
         })
     })
 }
+
+//对从数据库里获取的结果进行处理，如果有第二个参数的话，表示有正文，默认无
+function dealWithResult(result, haveText) {
+    var arr = [];
+    result.forEach(function (item) {
+        var obj = {
+            id: item.Id,
+            title: item.title,
+            editor: item.editor,
+            ctime: item.ctime,
+            type: item.type
+        };
+        if (haveText) {
+            obj.text = item.text;
+        }
+        arr.push(obj);
+    })
+    return arr;
+}
+
+
 module.exports = router;

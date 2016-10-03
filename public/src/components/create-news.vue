@@ -20,7 +20,6 @@
         <div v-if="mes=='titleError'" class="alert alert-danger" role="alert">标题不能为空</div>
         <div v-if="mes=='textError'" class="alert alert-danger" role="alert">正文不能为空</div>
         <div v-if="mes=='titleToLong'" class="alert alert-danger" role="alert">标题内容太长</div>
-        <div v-if="mes=='textToLong'" class="alert alert-danger" role="alert">正文内容太长</div>
         <div v-if="mes=='serverError'" class="alert alert-danger" role="alert">服务器错误</div>
         <div v-if="mes=='not-allow'" class="alert alert-danger" role="alert">你没有登录，不允许提交新闻</div>
         <div v-if="mes=='posting'" class="alert alert-info" role="alert">提交中。。。</div>
@@ -77,9 +76,6 @@
                     mes();
                 } else if (this.title.length > 20) {
                     this.mes = 'titleToLong';
-                    mes();
-                } else if (this.text.length > 20) {
-                    this.mes = 'textToLong';
                     mes();
                 } else {
                     var obj = {
