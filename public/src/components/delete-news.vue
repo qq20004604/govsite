@@ -14,8 +14,8 @@
                     <template v-for="item in news">
                         <p>
                             <span>【{{item.type}}】</span>
-                            <span class="text title">{{item.title}}</span>
-                            <span class="float-right" @click="deleteNews(item.Id)">删除新闻</span>
+                            <span class="text title" @click="newsView(item.id)">{{item.title}}</span>
+                            <span class="float-right" @click="deleteNews(item.id)">删除新闻</span>
                         </p>
                     </template>
                 </ul>
@@ -52,8 +52,7 @@
 
 </style>
 <script>
-    //import HeaderComponent from './components/header.vue'
-    //import OtherComponent from './components/other.vue'
+    import Bus from '../event-bus.js'
     export default{
         data(){
             return {
@@ -114,6 +113,10 @@
                         }
                     }
                 })
+            },
+            newsView: function (id) {
+                console.log(id);
+                Bus.$emit("setNewsId", id);
             }
         },
         components: {

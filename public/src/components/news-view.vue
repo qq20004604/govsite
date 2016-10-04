@@ -34,7 +34,7 @@
 
 </style>
 <script>
-
+    import Bus from '../event-bus.js'
     export default{
         data(){
             return {
@@ -43,18 +43,22 @@
             }
         },
         created: function () {
-            this.loadNews();
+            var self = this;
+            Bus.$on("setNewsId", function (id) {
+                self.id = id;
+                self.loadNews();
+            })
         },
         methods: {
             loadNews: function () {
                 var self = this;
+                console.log(self.id);
                 $.ajax({
                     url: "/loadnews",
                     type: "get",
                     dataType: "json",
                     data: {id: self.id}
                 }).done(function (result) {
-                    console.log(result);
                     if (result.code === 200) {
                         self.news = result.data[0];
                     }
