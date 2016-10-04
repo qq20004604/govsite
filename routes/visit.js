@@ -2,7 +2,7 @@
 var db = require('../models/db');
 var router = express.Router();  // 调用模块的Router方法
 
-router.all("/:anyurl", function (req, res, next) {
+router.get("/:anyurl", function (req, res, next) {
     var record = new VisitsRecord(req.connection.remoteAddress, "/" + req.params.anyurl);
     record.save();
     next();

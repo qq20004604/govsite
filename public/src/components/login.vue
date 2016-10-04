@@ -79,6 +79,7 @@
                         setTimeout(function () {
                             self.mes = '';
                             self.$parent.state = "already";
+                            self.$parent.haveLogined = true;
                         }, 1000);
                     }
                 })

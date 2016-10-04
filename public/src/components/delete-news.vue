@@ -13,8 +13,8 @@
                 <ul v-if="error==''">
                     <template v-for="item in news">
                         <p>
-                            <span>【{{item.type}}】</span>
-                            <span class="text title" @click="newsView(item.id)">{{item.title}}</span>
+                            <span class="type">【{{item.type}}】</span>
+                            <a class="text title" @click="newsView(item.id)" href="#">{{item.title}}</a>
                             <span class="float-right" @click="deleteNews(item.id)">删除新闻</span>
                         </p>
                     </template>
@@ -24,6 +24,14 @@
     </div>
 </template>
 <style scoped>
+    ul {
+        padding: 0;
+    }
+
+    .type {
+        white-space: nowrap;
+    }
+
     .background {
         padding-bottom: 20px;
     }

@@ -16,7 +16,7 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li class="active"><a href="#">首页</a></li>
+                    <li :class="{'active':this.$parent.state==''}"><a href="#" @click="gotoMainPage">首页</a></li>
                     <li><a href="#">新闻</a></li>
                     <li><a href="#">政策</a></li>
                     <li class="dropdown">
@@ -31,8 +31,15 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <p class="navbar-text text-alert">已访问人次：{{visitnumber}}</p>
-                    <li><a href="#" @click="login" v-if="this.$parent.state!='already'">登录</a></li>
-                    <li><a href="#" @click="logout" v-if="this.$parent.state=='already'">注销</a></li>
+                    <li :class="{'active':this.$parent.state=='login'}">
+                        <a href="#" @click="login" v-if="!this.$parent.haveLogined">登录</a>
+                    </li>
+                    <template v-if="this.$parent.haveLogined">
+                        <li :class="{'active':this.$parent.state=='already'}">
+                            <a href="#" @click="gotoManagePage">管理台</a>
+                        </li>
+                        <li><a href="#" @click="logout">注销</a></li>
+                    </template>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">上级政府 <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
@@ -75,10 +82,12 @@
     }
 </style>
 <script>
+    import Bus from '../event-bus.js'
     export default{
         data(){
             return {
-                visitnumber: "读取中..."
+                visitnumber: "读取中...",
+                classManager: {}
             }
         },
         created: function () {
@@ -96,14 +105,23 @@
                 })
             },
             login: function () {
+                Bus.$emit("setNewsShow", false);
                 this.$parent.state = "login";
             },
             logout: function () {
+                Bus.$emit("setNewsShow", false);
                 this.$parent.state = '';
-
             },
             changeNews: function () {
                 this.$parent.newsview = !this.$parent.newsview;
+            },
+            gotoMainPage: function () {
+                this.$parent.state = '';
+                Bus.$emit("setNewsShow", false);
+            },
+            gotoManagePage: function () {
+                this.$parent.state = 'already';
+                Bus.$emit("setNewsShow", false);
             }
         },
         components: {}

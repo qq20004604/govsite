@@ -1,16 +1,14 @@
 <template>
     <div class="background">
-        <div class="btn btn-primary">返回之前页面</div>
         <div class="row">
-            <template v-if="id">
-                <div class="col-md-12">
-                    <h2 class="text-center">
-                        {{news.title}}
-                    </h2>
-                    <p class="text-center">{{news.ctime|formatTime}}</p>
-                    <div class="main-text">{{news.text}}</div>
-                </div>
-            </template>
+            <span class="btn btn-primary backBtn" @click="backToLastPage">返回之前页面</span>
+            <div v-if="id" class="col-md-12">
+                <h2 class="text-center">
+                    {{news.title}}
+                </h2>
+                <p class="text-center">{{news.ctime|formatTime}}</p>
+                <div class="main-text">{{news.text}}</div>
+            </div>
             <h1 v-else class="col-md-12 text-center">
                 没有获取到任何新闻，请返回上一页
             </h1>
@@ -30,6 +28,10 @@
     .main-text {
         padding: 10px 30px 20px 30px;
         white-space: pre-wrap;
+    }
+
+    .backBtn {
+        margin-left: 40px;
     }
 
 </style>
@@ -52,7 +54,6 @@
         methods: {
             loadNews: function () {
                 var self = this;
-                console.log(self.id);
                 $.ajax({
                     url: "/loadnews",
                     type: "get",
@@ -63,6 +64,9 @@
                         self.news = result.data[0];
                     }
                 })
+            },
+            backToLastPage: function () {
+                Bus.$emit("setNewsShow", false);
             }
         },
         components: {

@@ -4,14 +4,14 @@
         <main-top></main-top>
         <!--新闻查看，页面之所以这样写，是为了方便在新闻隐藏后切换回原页面-->
         <news-view v-show="newsview"></news-view>
-        <template v-show="!newsview">
+        <div v-show="!newsview">
             <login-page v-if="state=='login'"></login-page>
             <manage-news v-if="state=='already'"></manage-news>
             <template v-if="state==''">
                 <main-container></main-container>
                 <main-foot></main-foot>
             </template>
-        </template>
+        </div>
     </div>
 </template>
 <script>
@@ -21,13 +21,24 @@
     import login from './components/login.vue'
     import manageNews from './components/manage-news.vue'
     import newsView from './components/news-view.vue'
+    import Bus from './event-bus'
 
     export default {
         data(){
             return {
                 state: "",
-                newsview: false
+                newsview: false,
+                haveLogined: false
             }
+        },
+        created: function () {
+            var self = this;
+            Bus.$on("setNewsId", function () {
+                self.newsview = true;
+            })
+            Bus.$on("setNewsShow", function (bool) {
+                self.newsview = bool;
+            })
         },
         components: {
             'main-top': mainTop,
