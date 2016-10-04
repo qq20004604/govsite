@@ -13,9 +13,9 @@
                 <ul v-if="error==''">
                     <template v-for="item in news">
                         <p>
+                            <button class="del-btn" @click="deleteNews(item.id)">删除新闻</button>
                             <span class="type">【{{item.type}}】</span>
                             <a class="text title" @click="newsView(item.id)" href="#">{{item.title}}</a>
-                            <span class="float-right" @click="deleteNews(item.id)">删除新闻</span>
                         </p>
                     </template>
                 </ul>
@@ -26,6 +26,7 @@
 <style scoped>
     ul {
         padding: 0;
+        margin-top: 20px;
     }
 
     .type {
@@ -36,16 +37,13 @@
         padding-bottom: 20px;
     }
 
-    .float-right {
-        float: right;
-        color: blue;
+    .del-btn {
         cursor: pointer;
     }
 
-    .float-right:hover {
-        color: darkcyan;
-        outline: 1px solid grey;
-        outline-offset: 3px;
+    .del-btn:hover {
+        background-color: grey;
+        color: white;
     }
 
     .text {
@@ -53,11 +51,6 @@
         overflow: hidden;
         white-space: nowrap;
     }
-
-    .title {
-        width: 60%;
-    }
-
 </style>
 <script>
     import Bus from '../event-bus.js'
@@ -78,8 +71,12 @@
                 $.ajax({
                     url: "/loadnews",
                     type: "get",
-                    dataType: "json"
+                    dataType: "json",
+                    data: {
+                        number: 20
+                    }
                 }).done(function (result) {
+                    console.log(result);
                     if (result.code === 501) {
                         self.error = 'noMoreNews';
                         return;

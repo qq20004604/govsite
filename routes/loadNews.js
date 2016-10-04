@@ -42,12 +42,13 @@ router.get('/', function (req, res, next) {    //当路由捕捉到url为/loadne
     //  其次判断查询个数，获取查询个数
     var number = null;
     //console.log(req.query);   //这个是url中，问号后面拼接出来的对象
-    if (!req.query.number || typeof req.query.number !== 'number') {
+    var queryNumber = Number(req.query.number);
+    if (!req.query.number || isNaN(queryNumber)) {
         number = 5;
-    } else if (req.query.number > 20 || req.query.number <= 0) {
+    } else if (queryNumber > 20 || queryNumber <= 0) {
         number = 20;
     } else {
-        number = req.query.number.toFixed(0);
+        number = queryNumber.toFixed(0);
     }
 
     //  最后判断类型查询
@@ -64,7 +65,7 @@ router.get('/', function (req, res, next) {    //当路由捕捉到url为/loadne
         arr.push(req.query.type);
     }
     str += ' limit ?';
-    arr.push(number);
+    arr.push(Number(number));
     // console.log(str);
     // console.log(arr);
     LoadNews(str, arr,

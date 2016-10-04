@@ -3,9 +3,8 @@
         <div class="row">
             <div class="col-md-2" :class="{'has-error':mes=='selectError'}">
                 <select class="form-control" v-model="type">
-                    <option value='a'>1</option>
-                    <option value=''>1</option>
-                    <option value=''>1</option>
+                    <option value='公告'>公告</option>
+                    <option value='新闻'>新闻</option>
                 </select>
             </div>
             <div class="col-md-10" :class="{'has-error':mes=='titleError'||mes=='titleToLong'}">
@@ -49,7 +48,7 @@
                 msg: 'hello vue',
                 title: '',
                 text: '',
-                type: "a",
+                type: "",
                 mes: ""
             }
         },
