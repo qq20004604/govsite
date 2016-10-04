@@ -4,12 +4,13 @@ var db = require('../models/db');   // 调用刚才封装好的user类
 
 
 router.get('/', function (req, res, next) {    //当路由捕捉到url为/loadnews的get请求时，会执行以下函数
-    //  有id则查询指定id新闻
-    //  有type时添加type查询语句；
-    //  没有type时，则不添加type（无类型限制）；
-    //  有number属性时，类型不符或者没有，则每次查询5个；大于20或小于0，则查询20个；0~20之间，取其整数作为查询条件
+    //  【1】有id则查询指定id新闻
+    //  【2】有area（可以有haveText属性），则范围查询（type生效）；
+    //  【3】有type时添加type查询语句；没有type时，则不添加type（无类型限制）；
+    //  【4】有number属性时，类型不符或者没有，则每次查询5个；大于20或小于0，则查询20个；0~20之间，取其整数作为查询条件
+    //  【5】由于查询字符串拼接是跟ajax收到信息间接相关，因此安全性是ok的。另外，nodejs的mysql模块默认禁止将多个查询语句拼接到一起
 
-    //由于查询字符串拼接是跟ajax收到信息间接相关，因此安全性是ok的。另外，nodejs的mysql模块默认禁止将多个查询语句拼接到一起
+    //  *****  id  *****
     //  使用id时只能查询到一个
     var str = 'select * from news';
     //  首先判断是否有id，有则处理之
@@ -39,9 +40,57 @@ router.get('/', function (req, res, next) {    //当路由捕捉到url为/loadne
         return;
     }
 
-    //  其次判断查询个数，获取查询个数
+    var arr = [];   //这个是查询的参数
+    // *****  area/haveText/type  *****
+    if (req.query.area instanceof Array) {
+        if (typeof req.query.type === 'string') {
+            str += ' where type = ?';
+            arr.push(req.query.type);
+        }
+        if (isNaN(Number(req.query.area[0])) && isNaN(Number(req.query.area[1]))) {
+            return res.send({
+                code: 500,
+                data: "error input"
+            });
+            return;
+        } else {
+            str += ' limit ?,?';
+            arr.push(Number(req.query.area[0]));
+            arr.push(Number(req.query.area[1]));
+        }
+
+        var haveText = false;
+        if (req.query.haveText === 'true') {
+            haveText = true;
+        }
+        LoadNews(str, arr,
+            function (err, result) {
+                if (result) { //如果第二个参数存在，说明用户名重复了，返回提示
+                    //需要对结果进行处理
+                    var resData = dealWithResult(result, haveText);
+                    return res.send({
+                        code: 200,
+                        data: resData
+                    });
+                }
+                if (err) {  //如果报错，返回报错信息
+                    console.log(err);
+                    return res.send({
+                        code: 500,
+                        data: "error server"
+                    });
+                }
+                return res.send({
+                    code: 501,
+                    data: "no more things"
+                })
+            })
+        return;
+    }
+
+
+    // *****  number/type  *****
     var number = null;
-    //console.log(req.query);   //这个是url中，问号后面拼接出来的对象
     var queryNumber = Number(req.query.number);
     if (!req.query.number || isNaN(queryNumber)) {
         number = 5;
@@ -52,10 +101,8 @@ router.get('/', function (req, res, next) {    //当路由捕捉到url为/loadne
     }
 
     //  最后判断类型查询
-    var arr = [];
-    // console.log(typeof req.query.type);
-    //  遍历查询字段语句SHOW FULL FIELDS FROM news;
     if (typeof req.query.type !== 'string' && typeof req.query.type !== 'undefined') {
+        //有type但类型不对
         return res.send({
             code: 500,
             data: "error input"

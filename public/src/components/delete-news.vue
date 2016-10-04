@@ -120,7 +120,6 @@
                 })
             },
             newsView: function (id) {
-                console.log(id);
                 Bus.$emit("setNewsId", id);
             }
         },
