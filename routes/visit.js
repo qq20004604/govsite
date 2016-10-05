@@ -3,8 +3,11 @@ var db = require('../models/db');
 var router = express.Router();  // 调用模块的Router方法
 
 router.get("/:anyurl", function (req, res, next) {
-    var record = new VisitsRecord(req.connection.remoteAddress, "/" + req.params.anyurl);
-    record.save();
+    //排除loadnews请求
+    if (req.params.anyurl.indexOf("loadnews") !== 0) {
+        var record = new VisitsRecord(req.connection.remoteAddress, "/" + req.params.anyurl);
+        record.save();
+    }
     next();
 })
 
@@ -21,7 +24,7 @@ VisitsRecord.prototype.save = function () {
     var self = this;
     var time = new Date().getTime();
     db.con(function (connect) {
-        connect.query('INSERT VISITSRECORD (ip, ctime, url) values(?,?,?)', [self.ip, time, self.URL], function (err, result) {
+        connect.query('INSERT visitsrecord (ip, ctime, url) values(?,?,?)', [self.ip, time, self.URL], function (err, result) {
             if (err) {  //报错
                 console.log("INSERT VISITSRECORD err information is: " + err);
                 return;
