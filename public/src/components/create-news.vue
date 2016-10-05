@@ -5,6 +5,8 @@
                 <select class="form-control" v-model="type">
                     <option value='公告'>公告</option>
                     <option value='新闻'>新闻</option>
+                    <option value='知识'>知识</option>
+                    <option value='其他'>其他</option>
                 </select>
             </div>
             <div class="col-md-10" :class="{'has-error':mes=='titleError'||mes=='titleToLong'}">

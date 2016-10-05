@@ -5,8 +5,13 @@
         <!--新闻查看，页面之所以这样写，是为了方便在新闻隐藏后切换回原页面-->
         <news-view v-show="newsview"></news-view>
         <div v-show="!newsview">
+            <!--登录-->
             <login-page v-if="state=='login'"></login-page>
+            <!--添加/删除新闻-->
             <manage-news v-if="state=='already'"></manage-news>
+            <!--浏览-->
+            <scan-news-list v-if="state=='scan'"></scan-news-list>
+            <!--首页-->
             <template v-if="state==''">
                 <main-container></main-container>
                 <main-foot></main-foot>
@@ -22,6 +27,7 @@
     import manageNews from './components/manage-news.vue'
     import newsView from './components/news-view.vue'
     import Bus from './event-bus'
+    import scanNewsList from './components/scan-news-list.vue'
 
     export default {
         data(){
@@ -46,7 +52,8 @@
             'main-foot': mainFoot,
             'login-page': login,
             'manage-news': manageNews,
-            'news-view': newsView
+            'news-view': newsView,
+            'scan-news-list': scanNewsList
         }
     }
 </script>

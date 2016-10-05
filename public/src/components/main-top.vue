@@ -17,7 +17,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li :class="{'active':this.$parent.state==''}"><a href="#" @click="gotoMainPage">首页</a></li>
-                    <li><a href="#" :class="{'active':this.$parent.state==''}">浏览</a></li>
+                    <li :class="{'active':this.$parent.state=='scan'}"><a href="#" @click="gotoScanPage">浏览</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">互动交流 <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
@@ -121,7 +121,11 @@
             gotoManagePage: function () {
                 this.$parent.state = 'already';
                 Bus.$emit("setNewsShow", false);
-            }
+            },
+            gotoScanPage: function () {
+                this.$parent.state = 'scan';
+                Bus.$emit("setNewsShow", false);
+            },
         },
         components: {}
     }
