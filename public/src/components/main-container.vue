@@ -139,10 +139,10 @@
 </style>
 <script>
     import Bus from '../event-bus.js'
+    import GlobalSetting from '../global-setting.js'
     export default{
         data(){
             return {
-                msg: 'hello vue',
                 announcement: [],
                 news: [],
                 knowledge: [],
@@ -150,13 +150,14 @@
             }
         },
         created: function () {
-            this.loadAnnouncement();
-            this.loadNews();
-            this.loadKnowledge();
-            this.loadOthers();
+            var self = this;
+            //精简再精简
+            GlobalSetting.types.forEach(function (item) {
+                self.load(item.area, item.value, item.name, item.isAnnouncement);
+            })
         },
         methods: {
-            loadAnnouncement: function () {
+            load: function (area, type, name, isAnnouncement) {
                 var self = this;
                 //加载公告
                 $.ajax({
@@ -164,100 +165,19 @@
                     type: "get",
                     dataType: "json",
                     data: {
-                        area: [0, 4],
+                        area: area,
                         haveText: true,
-                        type: "公告"
+                        type: type
                     },
                     cache: false
                 }).done(function (result) {
-                    console.log(result);
-                    if (result.code === 501) {
-                        self.error = 'noMoreNews';
-                    } else if (result.code !== 200) {
-                        self.error = 'error';
-                    } else {
-                        self.announcement = result.data;
+//                    console.log(result);
+                    if (result.code === 200) {
+                        self[name] = result.data;
                     }
-                    self.fullWithNews(self.announcement, "公告", true);
+                    self.fullWithNews(self[name], type, isAnnouncement);
                 });
-
             },
-            loadNews: function () {
-                var self = this;
-                //加载新闻
-                $.ajax({
-                    url: "/loadnews",
-                    type: "get",
-                    dataType: "json",
-                    data: {
-                        area: [0, 3],
-                        haveText: true,
-                        type: "新闻"
-                    },
-                    cache: false
-                }).done(function (result) {
-                    console.log(result);
-                    if (result.code === 501) {
-                        self.error = 'noMoreNews';
-                    } else if (result.code !== 200) {
-                        self.error = 'error';
-                    } else {
-                        self.news = result.data;
-                    }
-                    self.fullWithNews(self.news, "新闻");
-                })
-            },
-            loadKnowledge: function () {
-                var self = this;
-                //加载知识
-                $.ajax({
-                    url: "/loadnews",
-                    type: "get",
-                    dataType: "json",
-                    data: {
-                        area: [0, 3],
-                        haveText: true,
-                        type: "知识"
-                    },
-                    cache: false
-                }).done(function (result) {
-                    console.log(result);
-                    if (result.code === 501) {
-                        self.error = 'noMoreNews';
-                    } else if (result.code !== 200) {
-                        self.error = 'error';
-                    } else {
-                        self.knowledge = result.data;
-                    }
-                    self.fullWithNews(self.knowledge, "知识");
-                })
-            },
-            loadOthers: function () {
-                var self = this;
-                //加载其他
-                $.ajax({
-                    url: "/loadnews",
-                    type: "get",
-                    dataType: "json",
-                    data: {
-                        area: [0, 3],
-                        haveText: true,
-                        type: "其他"
-                    },
-                    cache: false
-                }).done(function (result) {
-                    console.log(result);
-                    if (result.code === 501) {
-                        self.error = 'noMoreNews';
-                    } else if (result.code !== 200) {
-                        self.error = 'error';
-                    } else {
-                        self.others = result.data;
-                    }
-                    self.fullWithNews(self.others, "其他");
-                })
-            },
-
             //填充满格子（3格）
             fullWithNews: function (arr, str, isAnnouncement) {
                 if (arr.length < (isAnnouncement ? 4 : 3)) {

@@ -26,7 +26,6 @@
                             <!--<li class="divider"></li>分割线-->
                         </ul>
                     </li>
-                    <li @click="changeNews">切换新闻</li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <p class="navbar-text text-alert">已访问人次：{{visitnumber}}</p>
@@ -110,9 +109,6 @@
             logout: function () {
                 Bus.$emit("setNewsShow", false);
                 this.$parent.state = '';
-            },
-            changeNews: function () {
-                this.$parent.newsview = !this.$parent.newsview;
             },
             gotoMainPage: function () {
                 this.$parent.state = '';

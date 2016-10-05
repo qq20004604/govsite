@@ -1,7 +1,32 @@
 <template>
     <div class="background">
-        <div class="row">
+        <div class="row main">
             <div class="col-md-12">
+                <div class="page-title">文章浏览</div>
+            </div>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-4">
+                        文章类型筛选：
+                        <select v-model="filter">
+                            <option value="all">全部类型</option>
+                            <option :value='item.value' v-for="item in types">{{item.value}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <template v-if="error==''||error=='noMoreNews'" v-for="item in list">
+                    <div class="row">
+                        <div class="col-md-1 type">【{{item.type}}】</div>
+                        <div class="col-md-9 text">
+                            <span @click="newsView(item.id)">{{item.title}}</span>
+                        </div>
+                        <div class="col-md-2 text">
+                            {{item.ctime|formatTime}}
+                        </div>
+                    </div>
+                </template>
                 <button v-if="canRefresh" class="btn btn-primary" @click="refresh">
                     <span v-if="list.length>0">点击加载更多内容</span>
                     <span v-else>点击重新加载内容</span>
@@ -10,19 +35,6 @@
                 <div v-if="error=='error'" class="alert alert-danger">
                     新闻加载失败
                 </div>
-                <ul v-if="error==''||error=='noMoreNews'">
-                    <template v-for="item in list">
-                        <div class="row">
-                            <div class="col-md-1 type">【{{item.type}}】</div>
-                            <div class="col-md-9 text" @click="newsView(item.id)">
-                                {{item.title}}
-                            </div>
-                            <div class="col-md-2 text">
-                                {{item.ctime|formatTime}}
-                            </div>
-                        </div>
-                    </template>
-                </ul>
                 <div v-if="error=='noMoreNews'" class="alert alert-warning">
                     没有更多内容了
                 </div>
@@ -31,8 +43,14 @@
     </div>
 </template>
 <style scoped>
-    ul {
-        margin-top: 20px;
+    .page-title {
+        font-size: 32px;
+        font-weight: 900;
+        padding: 15px 0 20px 20px;
+    }
+
+    .main {
+        margin: 0;
     }
 
     .row {
@@ -45,7 +63,7 @@
 
     .btn {
         margin-top: 20px;
-        margin-left: 40px;
+        margin-left: 20px;
     }
 
     .background {
@@ -71,6 +89,7 @@
 </style>
 <script>
     import Bus from '../event-bus.js'
+    import GlobalSetting from '../global-setting.js'
     export default{
         data(){
             return {
@@ -78,20 +97,23 @@
                 canRefresh: true,
                 list: [],
                 howMuchNewsOnceGet: 20,
-                nowNewsCount: 0
+                nowNewsCount: 0,
+                types: GlobalSetting.types,
+                filter: "all"
             }
         },
         created: function () {
             this.loadNews();
+            this.watchFilter();
         },
         methods: {
-            loadNews: function () {
+            loadNews: function (data, newAjax) {
                 var self = this;
                 $.ajax({
                     url: "/loadnews",
                     type: "get",
                     dataType: "json",
-                    data: {
+                    data: data ? data : {
                         area: [self.nowNewsCount, self.howMuchNewsOnceGet],
                         haveText: false
                     }
@@ -99,6 +121,7 @@
                     console.log(result);
                     if (result.code === 501) {
                         self.error = 'noMoreNews';
+                        self.list = [];
                         setTimeout(function () {
                             if (self.error === 'noMoreNews' && self.list.length > 0) {
                                 self.error = '';
@@ -107,9 +130,15 @@
                         return;
                     } else if (result.code !== 200) {
                         self.error = 'error';
+                        self.list = [];
                     } else {
-                        self.list = self.list.concat(result.data);
-                        self.nowNewsCount += result.data.length;
+                        if (newAjax) {
+                            self.nowNewsCount = result.data.length;
+                            self.list = result.data;
+                        } else {
+                            self.list = self.list.concat(result.data);
+                            self.nowNewsCount += result.data.length;
+                        }
                     }
                 })
             },
@@ -126,6 +155,22 @@
             },
             newsView: function (id) {
                 Bus.$emit("setNewsId", id);
+            },
+            watchFilter: function () {
+                var self = this;
+                this.$watch('filter', function (newVal, oldVal) {
+                    console.log(newVal);
+                    if (newVal === 'all') {
+                        self.loadNews();
+                        return;
+                    } else {
+                        self.loadNews({
+                            area: [0, self.howMuchNewsOnceGet],
+                            haveText: false,
+                            type: newVal
+                        }, true);
+                    }
+                })
             }
         }
     }

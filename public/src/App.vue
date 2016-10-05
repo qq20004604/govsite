@@ -75,4 +75,8 @@
         background: url(http://www.lintong.gov.cn/images/c_bg.jpg) no-repeat;
         background-size: contain;
     }
+
+    #app {
+        padding: 0;
+    }
 </style>

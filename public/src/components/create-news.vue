@@ -3,10 +3,7 @@
         <div class="row">
             <div class="col-md-2" :class="{'has-error':mes=='selectError'}">
                 <select class="form-control" v-model="type">
-                    <option value='公告'>公告</option>
-                    <option value='新闻'>新闻</option>
-                    <option value='知识'>知识</option>
-                    <option value='其他'>其他</option>
+                    <option :value='item.value' v-for="item in types">{{item.value}}</option>
                 </select>
             </div>
             <div class="col-md-10" :class="{'has-error':mes=='titleError'||mes=='titleToLong'}">
@@ -44,6 +41,7 @@
 
 </style>
 <script>
+    import GlobalSetting from '../global-setting.js'
     export default{
         data(){
             return {
@@ -51,7 +49,8 @@
                 title: '',
                 text: '',
                 type: "",
-                mes: ""
+                mes: "",
+                types: GlobalSetting.types,
             }
         },
         methods: {
@@ -122,6 +121,9 @@
                 this.type = '';
                 this.title = '';
                 this.text = '';
+            },
+            removeDefaultSelect: function () {
+                self.defaultSelect = false;
             }
         }
     }
