@@ -43,6 +43,9 @@ app.use('/loadnews', loadnews);
 //删除新闻
 var deletenews = require("./routes/deleteNews");
 app.use('/deletenews', deletenews);
+//街办信箱
+var postAdvice = require("./routes/postAdvice");
+app.use("/postAdvice", postAdvice);
 
 
 // catch 404 and forward to error handler

@@ -60,5 +60,18 @@ window下，启动根目录下的start.bat，可以启动Nodejs服务器。
       PRIMARY KEY (`Id`)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+    CREATE TABLE `advice` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `ctime` bigint(20) NOT NULL DEFAULT '0',
+      `title` varchar(60) NOT NULL DEFAULT '',
+      `text` text,
+      `tel` int(11) NOT NULL DEFAULT '0',
+      `response` text,
+      `mtime` bigint(20) DEFAULT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+
+
+注：前面没注意，id用的是Id，advice这张表开始改为id，之前的懒得改了。
 

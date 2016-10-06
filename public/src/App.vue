@@ -16,6 +16,7 @@
                 <main-container></main-container>
                 <main-foot></main-foot>
             </template>
+            <advice v-if="state=='advice'"></advice>
         </div>
     </div>
 </template>
@@ -28,6 +29,7 @@
     import newsView from './components/news-view.vue'
     import Bus from './event-bus'
     import scanNewsList from './components/scan-news-list.vue'
+    import advice from './components/advice.vue'
 
     export default {
         data(){
@@ -53,7 +55,8 @@
             'login-page': login,
             'manage-news': manageNews,
             'news-view': newsView,
-            'scan-news-list': scanNewsList
+            'scan-news-list': scanNewsList,
+            'advice': advice
         }
     }
 </script>
@@ -72,7 +75,7 @@
         width: 100%;
         height: 100%;
         z-index: -1;
-        background: url(http://www.lintong.gov.cn/images/c_bg.jpg) no-repeat;
+        background: url(/img/c_bg.jpg) no-repeat;
         background-size: contain;
     }
 

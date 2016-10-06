@@ -153,7 +153,7 @@ function LoadNews(str, arr, callback) {       // 这是一个User类，传递的
                 console.log(str + " error information is: " + err);
                 return;
             }
-            //注意，这里返回的是带账号和密码的，另外，理论上是有可能有多个元素的，但由于在注册时，用户名限制了重复，因此只会返回一个
+            
             selectResult = result;  //这里的result是一个数组，只包含一个元素（或者是空）
             if (selectResult.length) {  //查询到的话，数组是有元素的（即length > 0）
                 return callback(null, selectResult) //这里的selectResult就是user对象，包含name和password属性

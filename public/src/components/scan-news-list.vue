@@ -132,6 +132,7 @@
                         self.error = 'error';
                         self.list = [];
                     } else {
+                        self.error = '';
                         if (newAjax) {
                             self.nowNewsCount = result.data.length;
                             self.list = result.data;
@@ -151,7 +152,16 @@
                 setTimeout(function () {
                     self.canRefresh = true;
                 }, 3000);
-                this.loadNews();
+
+                //重新加载要从第0个开始加载，判断当前类型不是all的话，则需要加类型判断来加载
+                var obj = {
+                    area: [0, self.howMuchNewsOnceGet],
+                    haveText: false
+                };
+                if (this.filter !== 'all') {
+                    obj.type = this.filter;
+                }
+                this.loadNews(obj, true);
             },
             newsView: function (id) {
                 Bus.$emit("setNewsId", id);
@@ -160,7 +170,10 @@
                 var self = this;
                 this.$watch('filter', function (newVal, oldVal) {
                     if (newVal === 'all') {
-                        self.loadNews();
+                        self.loadNews({
+                            area: [0, self.howMuchNewsOnceGet],
+                            haveText: false
+                        }, true);
                         return;
                     } else {
                         self.loadNews({

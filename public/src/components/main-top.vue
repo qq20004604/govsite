@@ -21,7 +21,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">互动交流 <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
-                            <li><a href="#">街办信箱</a></li>
+                            <li @click="gotoAdvice"><a href="#">街办信箱</a></li>
                             <li><a href="#">浏览反馈</a></li>
                             <!--<li class="divider"></li>分割线-->
                         </ul>
@@ -43,19 +43,19 @@
                         <ul class="dropdown-menu" role="menu">
                             <li>
                                 <a href="http://www.gov.cn/" target="_blank">
-                                    <img src="http://www.lintong.gov.cn/images/gh.jpg"/>中央人民政府网站</a>
+                                    <img src="/img/gh.jpg"/>中央人民政府网站</a>
                             </li>
                             <li>
                                 <a href="http://www.shaanxi.gov.cn/" target="_blank"><img
-                                        src="http://www.lintong.gov.cn/images/gh.jpg"/>陕西省人民政府网站</a>
+                                        src="/img/gh.jpg"/>陕西省人民政府网站</a>
                             </li>
                             <li>
                                 <a href="http://www.xa.gov.cn/" target="_blank"><img
-                                        src="http://www.lintong.gov.cn/images/gh.jpg"/>西安市人民政府网站</a>
+                                        src="/img/gh.jpg"/>西安市人民政府网站</a>
                             </li>
                             <li>
                                 <a href="http://www.lintong.gov.cn/" target="_blank"><img
-                                        src="http://www.lintong.gov.cn/images/gh.jpg"/>临潼区人民政府网站</a>
+                                        src="/img/gh.jpg"/>临潼区人民政府网站</a>
                             </li>
                         </ul>
                     </li>
@@ -122,6 +122,10 @@
                 this.$parent.state = 'scan';
                 Bus.$emit("setNewsShow", false);
             },
+            gotoAdvice: function () {
+                this.$parent.state = 'advice';
+                Bus.$emit("setNewsShow", false);
+            }
         },
         components: {}
     }
