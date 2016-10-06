@@ -118,7 +118,7 @@
                         haveText: false
                     }
                 }).done(function (result) {
-                    console.log(result);
+//                    console.log(result);
                     if (result.code === 501) {
                         self.error = 'noMoreNews';
                         self.list = [];
@@ -159,7 +159,6 @@
             watchFilter: function () {
                 var self = this;
                 this.$watch('filter', function (newVal, oldVal) {
-                    console.log(newVal);
                     if (newVal === 'all') {
                         self.loadNews();
                         return;

@@ -16,6 +16,8 @@ router.get('/', function (req, res, next) {    //当路由捕捉到url为/loadne
     //  首先判断是否有id，有则处理之
     if (req.query.id && Number(req.query.id) > 0) {
         str += ' where Id = ?';
+        //倒序排列查找，下同。另外，这个命令需要在limit之前输入
+        str += ' order by Id desc';
         LoadNews(str, [req.query.id], function (err, result) {
             if (result) { //如果第二个参数存在，说明用户名重复了，返回提示
                 //需要对结果进行处理
@@ -54,6 +56,7 @@ router.get('/', function (req, res, next) {    //当路由捕捉到url为/loadne
             });
             return;
         } else {
+            str += ' order by Id desc';
             str += ' limit ?,?';
             arr.push(Number(req.query.area[0]));
             arr.push(Number(req.query.area[1]));
@@ -111,6 +114,7 @@ router.get('/', function (req, res, next) {    //当路由捕捉到url为/loadne
         str += ' where type = ?';
         arr.push(req.query.type);
     }
+    str += ' order by Id desc';
     str += ' limit ?';
     arr.push(Number(number));
     // console.log(str);
