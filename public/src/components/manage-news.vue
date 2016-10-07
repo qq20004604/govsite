@@ -8,7 +8,7 @@
         <delete-news v-else></delete-news>
     </div>
 </template>
-<style>
+<style scoped>
     .main {
         background-color: white;
         border-radius-bottomleft: 5px !important;

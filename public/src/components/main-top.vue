@@ -22,15 +22,15 @@
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">互动交流 <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
                             <li @click="gotoAdvice"><a href="#">街办信箱</a></li>
-                            <li><a href="#">浏览反馈</a></li>
+                            <li @click="gotoAdviceScanListPage"><a href="#">浏览反馈</a></li>
                             <!--<li class="divider"></li>分割线-->
                         </ul>
                     </li>
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <p class="navbar-text text-alert">已访问人次：{{visitnumber}}</p>
-                    <li :class="{'active':this.$parent.state=='login'}">
-                        <a href="#" @click="login" v-if="!this.$parent.haveLogined">登录</a>
+                    <li :class="{'active':this.$parent.state=='login'}" v-if="!this.$parent.haveLogined">
+                        <a href="#" @click="login">登录</a>
                     </li>
                     <template v-if="this.$parent.haveLogined">
                         <li :class="{'active':this.$parent.state=='already'}">
@@ -109,6 +109,17 @@
             logout: function () {
                 Bus.$emit("setNewsShow", false);
                 this.$parent.state = '';
+                this.$parent.haveLogined = false;
+                this.$root.user = "";
+                $.ajax({
+                    url: "/logout",
+                    type: "get",
+                    dataType: "json"
+                }).done(function (result) {
+                    if (result.code === 200) {
+                        alert("注销成功！");
+                    }
+                })
             },
             gotoMainPage: function () {
                 this.$parent.state = '';
@@ -124,6 +135,10 @@
             },
             gotoAdvice: function () {
                 this.$parent.state = 'advice';
+                Bus.$emit("setNewsShow", false);
+            },
+            gotoAdviceScanListPage: function () {
+                this.$parent.state = 'advice-list';
                 Bus.$emit("setNewsShow", false);
             }
         },

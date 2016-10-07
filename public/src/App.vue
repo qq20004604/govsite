@@ -16,7 +16,8 @@
                 <main-container></main-container>
                 <main-foot></main-foot>
             </template>
-            <advice v-if="state=='advice'"></advice>
+            <post-advice v-if="state=='advice'"></post-advice>
+            <scan-advice v-if="state=='advice-list'"></scan-advice>
         </div>
     </div>
 </template>
@@ -27,9 +28,11 @@
     import login from './components/login.vue'
     import manageNews from './components/manage-news.vue'
     import newsView from './components/news-view.vue'
-    import Bus from './event-bus'
     import scanNewsList from './components/scan-news-list.vue'
-    import advice from './components/advice.vue'
+    import advice from './components/post-advice.vue'
+    import scanAdvice from './components/scan-advice.vue'
+    import Bus from './event-bus'
+    import globalSetting from './global-setting'
 
     export default {
         data(){
@@ -56,7 +59,8 @@
             'manage-news': manageNews,
             'news-view': newsView,
             'scan-news-list': scanNewsList,
-            'advice': advice
+            'post-advice': advice,
+            'scan-advice': scanAdvice
         }
     }
 </script>

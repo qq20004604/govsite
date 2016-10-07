@@ -123,6 +123,7 @@
                         setTimeout(function () {
                             self.mes = '';
                             self.$parent.state = "already";
+                            self.$parent.haveLogined = true;
                         }, 1000);
                     } else if (result.code === 400) {
                         self.mes = 'pwError';    //密码错误

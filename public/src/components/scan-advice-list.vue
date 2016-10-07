@@ -1,43 +1,42 @@
 <template>
-    <div class="background">
-        <div class="row main">
-            <div class="col-md-12">
-                <div class="page-title">文章浏览</div>
+    <div class="row main">
+        <div class="col-md-12">
+            <div class="page-title">浏览反馈</div>
+        </div>
+        <div class="col-md-12" v-if="haveLogined">
+            <div class="row">
+                <div class="col-md-4">
+                    文章类型筛选：
+                    <select v-model="filter">
+                        <option value="all">全部类型</option>
+                        <option value='haveResponsed'>已回复</option>
+                        <option value='notResponsed'>未回复</option>
+                    </select>
+                </div>
             </div>
-            <div class="col-md-12">
+        </div>
+        <div class="col-md-12">
+            <template v-if="error==''||error=='noMoreNews'" v-for="item in advices">
                 <div class="row">
-                    <div class="col-md-4">
-                        文章类型筛选：
-                        <select v-model="filter">
-                            <option value="all">全部类型</option>
-                            <option :value='item.value' v-for="item in types">{{item.value}}</option>
-                        </select>
+                    <div class="col-md-1 type">【已解决】</div>
+                    <div class="col-md-9 text">
+                        <span @click="newsView(item.id)">{{item.title}}</span>
+                    </div>
+                    <div class="col-md-2 text">
+                        {{item.ctime|formatTime}}
                     </div>
                 </div>
+            </template>
+            <button v-if="canRefresh" class="btn btn-primary" @click="refresh">
+                <span v-if="advices.length>0">点击加载更多内容</span>
+                <span v-else>点击重新加载内容</span>
+            </button>
+            <button v-else class="btn btn-warning">刷新中……</button>
+            <div v-if="error=='error'" class="alert alert-danger">
+                新闻加载失败
             </div>
-            <div class="col-md-12">
-                <template v-if="error==''||error=='noMoreNews'" v-for="item in list">
-                    <div class="row">
-                        <div class="col-md-1 type">【{{item.type}}】</div>
-                        <div class="col-md-9 text">
-                            <span @click="newsView(item.id)">{{item.title}}</span>
-                        </div>
-                        <div class="col-md-2 text">
-                            {{item.ctime|formatTime}}
-                        </div>
-                    </div>
-                </template>
-                <button v-if="canRefresh" class="btn btn-primary" @click="refresh">
-                    <span v-if="list.length>0">点击加载更多内容</span>
-                    <span v-else>点击重新加载内容</span>
-                </button>
-                <button v-else class="btn btn-warning">刷新中……</button>
-                <div v-if="error=='error'" class="alert alert-danger">
-                    新闻加载失败
-                </div>
-                <div v-if="error=='noMoreNews'" class="alert alert-warning">
-                    没有更多内容了
-                </div>
+            <div v-if="error=='noMoreNews'" class="alert alert-warning">
+                没有更多内容了
             </div>
         </div>
     </div>
@@ -59,20 +58,12 @@
 
     .type {
         white-space: nowrap;
+        color: green;
     }
 
     .btn {
         margin-top: 20px;
         margin-left: 20px;
-    }
-
-    .background {
-        padding-bottom: 20px;
-        background-color: white;
-        border-radius-bottomleft: 5px !important;
-        border-radius-bottomright: 5px !important;
-        -webkit-border-bottom-left-radius: 5px;
-        -webkit-border-bottom-right-radius: 5px;
     }
 
     .text {
@@ -85,21 +76,21 @@
         text-decoration: underline;
         cursor: pointer;
     }
-
 </style>
 <script>
+
     import Bus from '../event-bus.js'
-    import GlobalSetting from '../global-setting.js'
+
     export default{
         data(){
             return {
+                advices: [],
+                filter: 'all',
                 error: '',
                 canRefresh: true,
-                list: [],
-                howMuchNewsOnceGet: 20,
+                haveLogined: this.$parent.$parent.haveLogined,
                 nowNewsCount: 0,
-                types: GlobalSetting.types,
-                filter: "all"
+                howMuchNewsOnceGet: 20
             }
         },
         created: function () {
@@ -110,34 +101,33 @@
             loadNews: function (data, newAjax) {
                 var self = this;
                 $.ajax({
-                    url: "/loadnews",
+                    url: "/loadAdvice",
                     type: "get",
                     dataType: "json",
                     data: data ? data : {
-                        area: [self.nowNewsCount, self.howMuchNewsOnceGet],
-                        haveText: false
+                        area: [self.nowNewsCount, self.howMuchNewsOnceGet]
                     }
                 }).done(function (result) {
 //                    console.log(result);
                     if (result.code === 501) {
                         self.error = 'noMoreNews';
-                        self.list = [];
+                        self.advices = [];
                         setTimeout(function () {
-                            if (self.error === 'noMoreNews' && self.list.length > 0) {
+                            if (self.error === 'noMoreNews' && self.advices.length > 0) {
                                 self.error = '';
                             }
                         }, 2000)
                         return;
                     } else if (result.code !== 200) {
                         self.error = 'error';
-                        self.list = [];
+                        self.advices = [];
                     } else {
                         self.error = '';
                         if (newAjax) {
                             self.nowNewsCount = result.data.length;
-                            self.list = result.data;
+                            self.advices = result.data;
                         } else {
-                            self.list = self.list.concat(result.data);
+                            self.advices = self.advices.concat(result.data);
                             self.nowNewsCount += result.data.length;
                         }
                     }
@@ -156,8 +146,7 @@
 
                 //重新加载要从第0个开始加载，判断当前类型不是all的话，则需要加类型判断来加载
                 var obj = {
-                    area: [0, self.howMuchNewsOnceGet],
-                    haveText: false
+                    area: [0, self.howMuchNewsOnceGet]
                 };
                 if (this.filter !== 'all') {
                     obj.type = this.filter;
@@ -165,7 +154,8 @@
                 this.loadNews(obj, true);
             },
             newsView: function (id) {
-                Bus.$emit("setNewsId", id);
+                this.$parent.state = 'page';
+                this.$parent.id = id;
             },
             watchFilter: function () {
                 var self = this;

@@ -34,6 +34,9 @@ app.use('/getVisitsNumber', VisitsNumber);
 //登录
 var Login = require("./routes/login");
 app.use('/login', Login);
+//注销
+var logout = require("./routes/logout");
+app.use('/logout', logout);
 //提交新闻
 var postnews = require("./routes/postNews");
 app.use('/postnews', postnews);
@@ -46,6 +49,9 @@ app.use('/deletenews', deletenews);
 //街办信箱
 var postAdvice = require("./routes/postAdvice");
 app.use("/postAdvice", postAdvice);
+//查看反馈
+var loadAdvice = require("./routes/loadAdvice");
+app.use("/loadAdvice", loadAdvice);
 
 
 // catch 404 and forward to error handler

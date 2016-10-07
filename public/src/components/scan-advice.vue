@@ -1,0 +1,35 @@
+<template>
+    <div class="background">
+        <scan-advice-list v-if="state=='list'"></scan-advice-list>
+        <scan-advice-page v-if="state=='page'"></scan-advice-page>
+    </div>
+</template>
+<style scoped>
+    .background {
+        padding-bottom: 20px;
+        background-color: white;
+        border-radius-bottomleft: 5px !important;
+        border-radius-bottomright: 5px !important;
+        -webkit-border-bottom-left-radius: 5px;
+        -webkit-border-bottom-right-radius: 5px;
+    }
+
+</style>
+<script>
+
+    import scanAdviceList from './scan-advice-list.vue'
+    import scanAdvicePage from './scan-advice-page.vue'
+    export default{
+        data(){
+            return {
+                state: "list",
+                id: null
+            }
+        },
+        methods: {},
+        components: {
+            'scan-advice-list': scanAdviceList,
+            'scan-advice-page': scanAdvicePage
+        }
+    }
+</script>

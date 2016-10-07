@@ -43,7 +43,7 @@ router.post('/', function (req, res, next) {    //当路由捕捉到url为/reg�
             data: "error post advice"
         });
     }
-    var userArray = [new Date().getTime(), req.body.title, req.body.text, req.body.tel];
+    var userArray = [new Date().getTime(), req.body.title, req.body.text, Number(req.body.tel)];
     SaveAdvice('INSERT advice (ctime, title, text, tel) values(?, ?, ?, ?)', userArray,
         function (err, result) {
             if (result) {   //有结果

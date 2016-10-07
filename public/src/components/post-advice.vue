@@ -7,7 +7,7 @@
             <div class="form-group" :class="{'has-error':error.title, 'has-feedback':error.title}">
                 <label for="advice-title" class="col-sm-1 control-label">标题</label>
                 <div class="col-sm-10">
-                    <input type="email" class="form-control"
+                    <input type="text" class="form-control"
                            id="advice-title" placeholder="请输入题目" v-model="title"/>
                 </div>
             </div>
@@ -21,7 +21,7 @@
             <div class="form-group" :class="{'has-error':error.tel, 'has-feedback':error.tel}">
                 <label for="advice-tel" class="col-sm-1 control-label">手机号码</label>
                 <div class="col-sm-10">
-                    <input class="form-control" rows="15" id="advice-tel" placeholder="请输入电话号码" v-model="tel"/>
+                    <input class="form-control" id="advice-tel" placeholder="请输入电话号码" v-model="tel"/>
                 </div>
             </div>
             <div class="form-group">
@@ -40,7 +40,10 @@
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-1 col-sm-10">
-                    <div type="submit" class="btn btn-default" @click="postAdvice">提交</div>
+                    <div type="submit" class="btn btn-default" @click="postAdvice"
+                         v-if="postState==''&&postAdviceState!='sumbitting'">提交
+                    </div>
+                    <div type="submit" class="btn btn-success" v-if="postState=='success'">提交完毕</div>
                 </div>
             </div>
         </form>
@@ -64,12 +67,6 @@
     textarea {
         resize: none;
     }
-
-    .text-right {
-        font-weight: 500;
-        font-size: 16px;
-        color: black;
-    }
 </style>
 <script>
     //import HeaderComponent from './components/header.vue'
@@ -89,7 +86,8 @@
                     telError: false
                 },
                 postAdviceState: "",
-                adviceId: "无"
+                adviceId: "无",
+                postState: ""
             }
         },
         methods: {
@@ -134,6 +132,9 @@
                 return currentInput;
             },
             postAdvice: function () {
+                if (this.havePosted) {
+                    return;
+                }
                 var self = this;
                 if (!this.checkinput()) {
                     return;
@@ -152,6 +153,7 @@
                     if (result.code === 200) {
                         self.postAdviceState = 'already';
                         self.adviceId = result.data;
+                        self.postState = 'success';
                     } else {
                         self.postAdviceState = 'error';
                     }
