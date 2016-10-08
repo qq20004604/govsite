@@ -8,7 +8,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         文章类型筛选：
-                        <select v-model="filter">
+                        <select v-model="Filter">
                             <option value="all">全部类型</option>
                             <option :value='item.value' v-for="item in types">{{item.value}}</option>
                         </select>
@@ -99,11 +99,22 @@
                 howMuchNewsOnceGet: 20,
                 nowNewsCount: 0,
                 types: GlobalSetting.types,
-                filter: "all"
+                Filter: "all"
             }
         },
         created: function () {
-            this.loadNews();
+            var self = this;
+            var type = GlobalSetting.getScanNewsFilterType();
+            if (type) {
+                this.Filter = type;
+                self.loadNews({
+                    area: [0, self.howMuchNewsOnceGet],
+                    haveText: false,
+                    type: type
+                }, true);
+            } else {
+                this.loadNews();
+            }
             this.watchFilter();
         },
         methods: {
@@ -159,8 +170,8 @@
                     area: [0, self.howMuchNewsOnceGet],
                     haveText: false
                 };
-                if (this.filter !== 'all') {
-                    obj.type = this.filter;
+                if (this.Filter !== 'all') {
+                    obj.type = this.Filter;
                 }
                 this.loadNews(obj, true);
             },
@@ -169,7 +180,7 @@
             },
             watchFilter: function () {
                 var self = this;
-                this.$watch('filter', function (newVal, oldVal) {
+                this.$watch('Filter', function (newVal, oldVal) {
                     if (newVal === 'all') {
                         self.loadNews({
                             area: [0, self.howMuchNewsOnceGet],

@@ -27,7 +27,7 @@
                         {{i.text}}</p>
                 </a>
 
-                <a href="#" class="list-group-item look-more" @click="">
+                <a href="#" class="list-group-item look-more" @click="viewNewsByType('公告')">
                     <h4 class="list-group-item-heading">查看更多...</h4>
                 </a>
             </div>
@@ -42,7 +42,7 @@
                         {{i.text}}</p>
                 </a>
 
-                <a href="#" class="list-group-item look-more" @click="">
+                <a href="#" class="list-group-item look-more" @click="viewNewsByType('新闻')">
                     <h4 class="list-group-item-heading">查看更多...</h4>
                 </a>
             </div>
@@ -57,7 +57,7 @@
                         {{i.text}}</p>
                 </a>
 
-                <a href="#" class="list-group-item look-more" @click="">
+                <a href="#" class="list-group-item look-more" @click="viewNewsByType('知识')">
                     <h4 class="list-group-item-heading">查看更多...</h4>
                 </a>
             </div>
@@ -72,7 +72,7 @@
                         {{i.text}}</p>
                 </a>
 
-                <a href="#" class="list-group-item look-more" @click="">
+                <a href="#" class="list-group-item look-more" @click="viewNewsByType('其他')">
                     <h4 class="list-group-item-heading">查看更多...</h4>
                 </a>
             </div>
@@ -194,6 +194,10 @@
                 if (id) {
                     Bus.$emit("setNewsId", id);
                 }
+            },
+            viewNewsByType: function (type) {
+                GlobalSetting.setScanNewsFilterType(type);
+                this.$parent.state = 'scan';
             }
         },
         components: {}

@@ -14,11 +14,11 @@
             <!--首页-->
             <template v-if="state==''">
                 <main-container></main-container>
-                <main-foot></main-foot>
             </template>
             <post-advice v-if="state=='advice'"></post-advice>
             <scan-advice v-if="state=='advice-list'"></scan-advice>
         </div>
+        <main-foot></main-foot>
     </div>
 </template>
 <script>
@@ -79,7 +79,7 @@
         width: 100%;
         height: 100%;
         z-index: -1;
-        background: url(/img/c_bg.jpg) no-repeat;
+        background: url(/img/c_bg.png) no-repeat;
         background-size: contain;
     }
 

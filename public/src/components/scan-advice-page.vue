@@ -1,10 +1,10 @@
 <template>
     <div class="background">
         <h2>
-            街办信箱
+            浏览反馈内容
         </h2>
         <div class="btn-group backBtn">
-            <button type="button" class="btn btn-primary" @click="">返回列表</button>
+            <button type="button" class="btn btn-primary" @click="backToList">返回列表</button>
         </div>
         <form class="form-horizontal" role="form">
             <div class="form-group">
@@ -111,6 +111,9 @@
                 }).fail(function () {
 
                 })
+            },
+            backToList: function () {
+                this.$parent.state = 'list';
             }
         },
         components: {
