@@ -79,7 +79,7 @@
 </style>
 <script>
 
-    import Bus from '../event-bus.js'
+    import globalSetting from '../global-setting'
 
     export default{
         data(){
@@ -88,9 +88,10 @@
                 filter: 'all',
                 error: '',
                 canRefresh: true,
-                haveLogined: this.$parent.$parent.haveLogined,
+                haveLogined: this.app.haveLogined,
                 nowNewsCount: 0,
-                howMuchNewsOnceGet: 20
+                howMuchNewsOnceGet: 20,
+                app: globalSetting.getAppComponent()
             }
         },
         created: function () {
@@ -154,8 +155,8 @@
                 this.loadNews(obj, true);
             },
             newsView: function (id) {
-                this.$parent.state = 'page';
-                this.$parent.id = id;
+                this.app.state = 'page';
+                globalSetting.setScanAdviceId(id);
             },
             watchFilter: function () {
                 var self = this;

@@ -17,6 +17,7 @@
 </style>
 <script>
 
+    import Bus from '../event-bus.js'
     import scanAdviceList from './scan-advice-list.vue'
     import scanAdvicePage from './scan-advice-page.vue'
     export default{
@@ -25,6 +26,12 @@
                 state: "list",
                 id: null
             }
+        },
+        created: function () {
+            var self = this;
+            Bus.$on("setScanAdviceState", function (state) {
+                self.state = state;
+            });
         },
         methods: {},
         components: {

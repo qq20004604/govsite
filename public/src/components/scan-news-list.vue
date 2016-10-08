@@ -104,6 +104,7 @@
         },
         created: function () {
             var self = this;
+            //如果能获取到类型（说明需要只显示指定类型的新闻），否则正常加载新闻
             var type = GlobalSetting.getScanNewsFilterType();
             if (type) {
                 this.Filter = type;

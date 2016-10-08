@@ -22,6 +22,8 @@
     </div>
 </template>
 <script>
+    import Bus from './event-bus'
+    import globalSetting from './global-setting'
     import mainTop from './components/main-top.vue'
     import mainContainer from './components/main-container.vue'
     import mainFoot from './components/main-foot.vue'
@@ -31,8 +33,6 @@
     import scanNewsList from './components/scan-news-list.vue'
     import advice from './components/post-advice.vue'
     import scanAdvice from './components/scan-advice.vue'
-    import Bus from './event-bus'
-    import globalSetting from './global-setting'
 
     export default {
         data(){
@@ -50,6 +50,7 @@
             Bus.$on("setNewsShow", function (bool) {
                 self.newsview = bool;
             })
+            globalSetting.setAppComponent(this);
         },
         components: {
             'main-top': mainTop,

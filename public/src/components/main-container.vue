@@ -197,7 +197,7 @@
             },
             viewNewsByType: function (type) {
                 GlobalSetting.setScanNewsFilterType(type);
-                this.$parent.state = 'scan';
+                globalSetting.getAppComponent().state = 'scan';
             }
         },
         components: {}

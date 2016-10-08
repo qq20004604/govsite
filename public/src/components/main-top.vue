@@ -16,8 +16,8 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
-                    <li :class="{'active':this.$parent.state==''}"><a href="#" @click="gotoMainPage">首页</a></li>
-                    <li :class="{'active':this.$parent.state=='scan'}"><a href="#" @click="gotoScanPage">浏览</a></li>
+                    <li :class="{'active':app.state==''}"><a href="#" @click="gotoMainPage">首页</a></li>
+                    <li :class="{'active':app.state=='scan'}"><a href="#" @click="gotoScanPage">浏览</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">互动交流 <span class="caret"></span></a>
                         <ul class="dropdown-menu" role="menu">
@@ -29,11 +29,11 @@
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <p class="navbar-text text-alert">已访问人次：{{visitnumber}}</p>
-                    <li :class="{'active':this.$parent.state=='login'}" v-if="!this.$parent.haveLogined">
+                    <li :class="{'active':app.state=='login'}" v-if="!app.haveLogined">
                         <a href="#" @click="login">登录</a>
                     </li>
-                    <template v-if="this.$parent.haveLogined">
-                        <li :class="{'active':this.$parent.state=='already'}">
+                    <template v-if="app.haveLogined">
+                        <li :class="{'active':app.state=='already'}">
                             <a href="#" @click="gotoManagePage">管理台</a>
                         </li>
                         <li><a href="#" @click="logout">注销</a></li>
@@ -81,11 +81,13 @@
 </style>
 <script>
     import Bus from '../event-bus.js'
+    import globalSetting from '../global-setting'
     export default{
         data(){
             return {
                 visitnumber: "读取中...",
-                classManager: {}
+                classManager: {},
+                app: globalSetting.getAppComponent()
             }
         },
         created: function () {
@@ -104,12 +106,12 @@
             },
             login: function () {
                 Bus.$emit("setNewsShow", false);
-                this.$parent.state = "login";
+                this.app.state = "login";
             },
             logout: function () {
                 Bus.$emit("setNewsShow", false);
-                this.$parent.state = '';
-                this.$parent.haveLogined = false;
+                this.app.state = '';
+                this.app.haveLogined = false;
                 this.$root.user = "";
                 $.ajax({
                     url: "/logout",
@@ -122,23 +124,23 @@
                 })
             },
             gotoMainPage: function () {
-                this.$parent.state = '';
+                this.app.state = '';
                 Bus.$emit("setNewsShow", false);
             },
             gotoManagePage: function () {
-                this.$parent.state = 'already';
+                this.app.state = 'already';
                 Bus.$emit("setNewsShow", false);
             },
             gotoScanPage: function () {
-                this.$parent.state = 'scan';
+                this.app.state = 'scan';
                 Bus.$emit("setNewsShow", false);
             },
             gotoAdvice: function () {
-                this.$parent.state = 'advice';
+                this.app.state = 'advice';
                 Bus.$emit("setNewsShow", false);
             },
             gotoAdviceScanListPage: function () {
-                this.$parent.state = 'advice-list';
+                this.app.state = 'advice-list';
                 Bus.$emit("setNewsShow", false);
             }
         },

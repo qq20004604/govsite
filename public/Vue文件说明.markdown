@@ -1,3 +1,8 @@
+#main.js
+
+    user    //用于设置用户状态的，只有登录后才有值，获取方法是this.$root.user
+
+
 #App.vue
 
 状态变量 state

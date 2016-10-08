@@ -42,6 +42,7 @@
     //  登录组件
     //  操作了父组件的state属性
     //  操作了根组件的user属性
+    import globalSetting from '../global-setting'
 
     export default{
         data(){
@@ -50,7 +51,7 @@
                 account: "",
                 password: "",
                 mes: '',
-                state: this.$parent.state
+                state: globalSetting.getAppComponent().state
             }
         },
         created: function () {
@@ -58,7 +59,7 @@
         },
         methods: {
             backHomePage: function () {
-                this.$parent.state = "";
+                globalSetting.getAppComponent().state = "";
             },
             isHaveLogined: function () {
                 var self = this;
@@ -78,8 +79,8 @@
                         self.mes = 'success';
                         setTimeout(function () {
                             self.mes = '';
-                            self.$parent.state = "already";
-                            self.$parent.haveLogined = true;
+                            globalSetting.getAppComponent().state = "already";
+                            globalSetting.getAppComponent().haveLogined = true;
                         }, 1000);
                     }
                 })
@@ -122,8 +123,8 @@
                         self.password = "";
                         setTimeout(function () {
                             self.mes = '';
-                            self.$parent.state = "already";
-                            self.$parent.haveLogined = true;
+                            globalSetting.getAppComponent().state = "already";
+                            globalSetting.getAppComponent().haveLogined = true;
                         }, 1000);
                     } else if (result.code === 400) {
                         self.mes = 'pwError';    //密码错误
