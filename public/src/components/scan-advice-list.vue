@@ -3,7 +3,7 @@
         <div class="col-md-12">
             <div class="page-title">浏览反馈</div>
         </div>
-        <div class="col-md-12" v-if="haveLogined">
+        <div class="col-md-12" v-if="app.haveLogined">
             <div class="row">
                 <div class="col-md-4">
                     文章类型筛选：
@@ -78,9 +78,7 @@
     }
 </style>
 <script>
-
-    import globalSetting from '../global-setting'
-
+    import Bus from '../event-bus.js'
     export default{
         data(){
             return {
@@ -88,10 +86,9 @@
                 filter: 'all',
                 error: '',
                 canRefresh: true,
-                haveLogined: this.app.haveLogined,
+                app: Bus.getAppComponent(),
                 nowNewsCount: 0,
-                howMuchNewsOnceGet: 20,
-                app: globalSetting.getAppComponent()
+                howMuchNewsOnceGet: 20
             }
         },
         created: function () {
@@ -156,7 +153,7 @@
             },
             newsView: function (id) {
                 this.app.state = 'page';
-                globalSetting.setScanAdviceId(id);
+                Bus.setScanAdviceId(id);
             },
             watchFilter: function () {
                 var self = this;

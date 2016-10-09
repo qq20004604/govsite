@@ -41,7 +41,7 @@
 
 </style>
 <script>
-    import GlobalSetting from '../global-setting.js'
+    import Bus from '../event-bus.js'
     export default{
         data(){
             return {
@@ -50,7 +50,7 @@
                 text: '',
                 type: "",
                 mes: "",
-                types: GlobalSetting.types,
+                types: Bus.types,
             }
         },
         methods: {

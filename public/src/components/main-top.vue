@@ -1,5 +1,5 @@
 <template>
-    <nav class="navbar navbar-default" role="navigation">
+    <header class="navbar navbar-default" role="navigation">
         <div class="container-fluid">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -10,7 +10,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">临潼区北田街道办事处</a>
+                <a class="navbar-brand" href="#" @click="gotoMainPage">临潼区北田街道办事处</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -62,7 +62,7 @@
                 </ul>
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
-    </nav>
+    </header>
 </template>
 <style scoped>
     .dropdown-menu a img {
@@ -81,13 +81,12 @@
 </style>
 <script>
     import Bus from '../event-bus.js'
-    import globalSetting from '../global-setting'
     export default{
         data(){
             return {
                 visitnumber: "读取中...",
                 classManager: {},
-                app: globalSetting.getAppComponent()
+                app: Bus.getAppComponent()
             }
         },
         created: function () {

@@ -73,12 +73,11 @@
 </style>
 <script>
     import Bus from '../event-bus.js'
-    import globalSetting from '../global-setting'
     export default{
         data(){
             return {
                 advice: {
-                    id: globalSetting.getScanAdviceId(),
+                    id: Bus.getScanAdviceId(),
                     title: "读取中",
                     text: "读取中",
                     tel: "读取中",

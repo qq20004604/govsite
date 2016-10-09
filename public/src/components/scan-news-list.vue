@@ -69,10 +69,7 @@
     .background {
         padding-bottom: 20px;
         background-color: white;
-        border-radius-bottomleft: 5px !important;
-        border-radius-bottomright: 5px !important;
-        -webkit-border-bottom-left-radius: 5px;
-        -webkit-border-bottom-right-radius: 5px;
+        border-radius: 0 !important;
     }
 
     .text {
@@ -89,7 +86,6 @@
 </style>
 <script>
     import Bus from '../event-bus.js'
-    import GlobalSetting from '../global-setting.js'
     export default{
         data(){
             return {
@@ -98,14 +94,14 @@
                 list: [],
                 howMuchNewsOnceGet: 20,
                 nowNewsCount: 0,
-                types: GlobalSetting.types,
+                types: Bus.types,
                 Filter: "all"
             }
         },
         created: function () {
             var self = this;
             //如果能获取到类型（说明需要只显示指定类型的新闻），否则正常加载新闻
-            var type = GlobalSetting.getScanNewsFilterType();
+            var type = Bus.getScanNewsFilterType();
             if (type) {
                 this.Filter = type;
                 self.loadNews({

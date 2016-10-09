@@ -1,5 +1,5 @@
 <template>
-    <div class="background">
+    <article class="background">
         <div class="row">
             <span class="btn btn-primary backBtn" @click="backToLastPage">返回之前页面</span>
             <div v-if="id && news" class="col-md-12">
@@ -16,16 +16,13 @@
                 没有获取到任何新闻，请返回上一页
             </h1>
         </div>
-    </div>
+    </article>
 </template>
 <style scoped>
     .background {
         padding-bottom: 20px;
         background-color: white;
-        border-radius-bottomleft: 5px !important;
-        border-radius-bottomright: 5px !important;
-        -webkit-border-bottom-left-radius: 5px;
-        -webkit-border-bottom-right-radius: 5px;
+        border-radius: 0 !important;
     }
 
     .main-text {

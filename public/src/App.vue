@@ -23,7 +23,6 @@
 </template>
 <script>
     import Bus from './event-bus'
-    import globalSetting from './global-setting'
     import mainTop from './components/main-top.vue'
     import mainContainer from './components/main-container.vue'
     import mainFoot from './components/main-foot.vue'
@@ -43,6 +42,7 @@
             }
         },
         created: function () {
+            console.log(this);
             var self = this;
             Bus.$on("setNewsId", function () {
                 self.newsview = true;
@@ -50,7 +50,7 @@
             Bus.$on("setNewsShow", function (bool) {
                 self.newsview = bool;
             })
-            globalSetting.setAppComponent(this);
+            Bus.setAppComponent(this);
         },
         components: {
             'main-top': mainTop,

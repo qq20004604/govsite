@@ -24,10 +24,7 @@
 <style scoped>
     .main {
         background-color: white;
-        border-radius-bottomleft: 5px !important;
-        border-radius-bottomright: 5px !important;
-        -webkit-border-bottom-left-radius: 5px;
-        -webkit-border-bottom-right-radius: 5px;
+        border-radius: 0 !important;
     }
 
     .form {
@@ -42,7 +39,7 @@
     //  登录组件
     //  操作了父组件的state属性
     //  操作了根组件的user属性
-    import globalSetting from '../global-setting'
+    import Bus from '../event-bus'
 
     export default{
         data(){
@@ -51,7 +48,7 @@
                 account: "",
                 password: "",
                 mes: '',
-                state: globalSetting.getAppComponent().state
+                state: Bus.getAppComponent().state
             }
         },
         created: function () {
@@ -59,7 +56,7 @@
         },
         methods: {
             backHomePage: function () {
-                globalSetting.getAppComponent().state = "";
+                Bus.getAppComponent().state = "";
             },
             isHaveLogined: function () {
                 var self = this;
@@ -79,8 +76,8 @@
                         self.mes = 'success';
                         setTimeout(function () {
                             self.mes = '';
-                            globalSetting.getAppComponent().state = "already";
-                            globalSetting.getAppComponent().haveLogined = true;
+                            Bus.getAppComponent().state = "already";
+                            Bus.getAppComponent().haveLogined = true;
                         }, 1000);
                     }
                 })
@@ -123,8 +120,8 @@
                         self.password = "";
                         setTimeout(function () {
                             self.mes = '';
-                            globalSetting.getAppComponent().state = "already";
-                            globalSetting.getAppComponent().haveLogined = true;
+                            Bus.getAppComponent().state = "already";
+                            Bus.getAppComponent().haveLogined = true;
                         }, 1000);
                     } else if (result.code === 400) {
                         self.mes = 'pwError';    //密码错误

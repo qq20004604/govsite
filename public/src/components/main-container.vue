@@ -88,12 +88,12 @@
 
     .main {
         background-color: white;
-        border-radius-bottomleft: 5px !important;
-        border-radius-bottomright: 5px !important;
+        border-radius: 0 !important;
     }
 
     .show-grid {
         border: 1px solid rgba(86, 61, 124, .2);
+        border-bottom: 0;
     }
 
     .too-long-text, .main-announcement-text {
@@ -139,7 +139,6 @@
 </style>
 <script>
     import Bus from '../event-bus.js'
-    import GlobalSetting from '../global-setting.js'
     export default{
         data(){
             return {
@@ -152,7 +151,7 @@
         created: function () {
             var self = this;
             //精简再精简
-            GlobalSetting.types.forEach(function (item) {
+            Bus.types.forEach(function (item) {
                 self.load(item.area, item.value, item.name, item.isAnnouncement);
             })
         },
@@ -196,8 +195,8 @@
                 }
             },
             viewNewsByType: function (type) {
-                GlobalSetting.setScanNewsFilterType(type);
-                globalSetting.getAppComponent().state = 'scan';
+                Bus.setScanNewsFilterType(type);
+                Bus.getAppComponent().state = 'scan';
             }
         },
         components: {}

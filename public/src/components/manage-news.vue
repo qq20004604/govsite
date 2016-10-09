@@ -11,10 +11,7 @@
 <style scoped>
     .main {
         background-color: white;
-        border-radius-bottomleft: 5px !important;
-        border-radius-bottomright: 5px !important;
-        -webkit-border-bottom-left-radius: 5px;
-        -webkit-border-bottom-right-radius: 5px;
+        border-radius: 0 !important;
     }
 
     .editnews {
