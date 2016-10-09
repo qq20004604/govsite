@@ -12,9 +12,7 @@
             <!--浏览-->
             <news-scan-list v-if="state=='scan'"></news-scan-list>
             <!--首页-->
-            <template v-if="state==''">
-                <main-container></main-container>
-            </template>
+            <main-container v-if="state==''"></main-container>
             <advice-post v-if="state=='advice'"></advice-post>
             <advice-scan v-if="state=='advice-list'"></advice-scan>
         </div>

@@ -1,27 +1,34 @@
 <template>
-    <div class="col-md-12 main">
-        <form role="form" class="form" v-if="state=='login'">
-            <div class="form-group">
-                <label>账号</label>
-                <input type="text" class="form-control" v-model="account" placeholder="请输入账号">
-            </div>
-            <div class="form-group" :class="{'has-error':mes=='pwError'}">
-                <label>密码</label>
-                <input type="password" class="form-control" v-model="password" placeholder="密码"
-                       @keyup.enter="loginPost">
-            </div>
-            <div v-if="mes=='inputError'" class="alert alert-danger" role="alert">账号名或密码为空</div>
-            <div v-if="mes=='accountError'" class="alert alert-danger" role="alert">用户名不存在</div>
-            <div v-if="mes=='pwError'" class="alert alert-danger" role="alert">密码错误</div>
-            <div v-if="mes=='serverError'" class="alert alert-danger" role="alert">服务器错误</div>
-            <div v-if="mes=='logining'" class="alert alert-info" role="alert">登录中。。。</div>
-            <div v-if="mes=='success'" class="alert alert-success" role="alert">登录成功，1秒后跳转</div>
-            <div class="btn btn-primary" @click="loginPost">登录</div>
-            <div class="btn btn-default" @click="backHomePage">返回首页</div>
-        </form>
+    <div class="row">
+        <div class="col-md-12 main">
+            <form role="form" class="form" v-if="state=='login'">
+                <div class="form-group">
+                    <label>账号</label>
+                    <input type="text" class="form-control" v-model="account" placeholder="请输入账号">
+                </div>
+                <div class="form-group" :class="{'has-error':mes=='pwError'}">
+                    <label>密码</label>
+                    <input type="password" class="form-control" v-model="password" placeholder="密码"
+                           @keyup.enter="loginPost">
+                </div>
+                <div v-if="mes=='inputError'" class="alert alert-danger" role="alert">账号名或密码为空</div>
+                <div v-if="mes=='accountError'" class="alert alert-danger" role="alert">用户名不存在</div>
+                <div v-if="mes=='pwError'" class="alert alert-danger" role="alert">密码错误</div>
+                <div v-if="mes=='serverError'" class="alert alert-danger" role="alert">服务器错误</div>
+                <div v-if="mes=='logining'" class="alert alert-info" role="alert">登录中。。。</div>
+                <div v-if="mes=='success'" class="alert alert-success" role="alert">登录成功，1秒后跳转</div>
+                <div class="btn btn-primary" @click="loginPost">登录</div>
+                <div class="btn btn-default" @click="backHomePage">返回首页</div>
+            </form>
+        </div>
     </div>
 </template>
 <style scoped>
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
     .main {
         background-color: white;
         border-radius: 0 !important;

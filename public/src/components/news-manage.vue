@@ -1,14 +1,21 @@
 <template>
-    <div class="col-md-12 main">
-        <div class="btn-group btn-group-lg editnews">
-            <button type="button" class="btn btn-primary" @click="setEditStatus('edit')">创建新闻</button>
-            <button type="button" class="btn btn-danger" @click="setEditStatus('')">删除新闻</button>
+    <div class="row">
+        <div class="col-md-12 main">
+            <div class="btn-group btn-group-lg editnews">
+                <button type="button" class="btn btn-primary" @click="setEditStatus('edit')">创建新闻</button>
+                <button type="button" class="btn btn-danger" @click="setEditStatus('')">删除新闻</button>
+            </div>
+            <news-create v-if="editStatus=='edit'"></news-create>
+            <news-delete v-else></news-delete>
         </div>
-        <news-create v-if="editStatus=='edit'"></news-create>
-        <news-delete v-else></news-delete>
     </div>
 </template>
 <style scoped>
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
     .main {
         background-color: white;
         border-radius: 0 !important;
