@@ -4,8 +4,8 @@
             <button type="button" class="btn btn-primary" @click="setEditStatus('edit')">创建新闻</button>
             <button type="button" class="btn btn-danger" @click="setEditStatus('')">删除新闻</button>
         </div>
-        <create-news v-if="editStatus=='edit'"></create-news>
-        <delete-news v-else></delete-news>
+        <news-create v-if="editStatus=='edit'"></news-create>
+        <news-delete v-else></news-delete>
     </div>
 </template>
 <style scoped>
@@ -20,8 +20,8 @@
 
 </style>
 <script>
-    import createNews from './create-news.vue'
-    import deleteNews from './delete-news.vue'
+    import createNews from './news-create.vue'
+    import deleteNews from './news-delete.vue'
     export default{
         data(){
             return {
@@ -34,8 +34,8 @@
             }
         },
         components: {
-            'create-news': createNews,
-            'delete-news': deleteNews
+            'news-create': createNews,
+            'news-delete': deleteNews
         }
     }
 </script>

@@ -1,7 +1,7 @@
 <template>
     <div class="background">
-        <scan-advice-list v-if="state=='list'"></scan-advice-list>
-        <scan-advice-page v-if="state=='page'"></scan-advice-page>
+        <advice-scan-list v-if="state=='list'"></advice-scan-list>
+        <advice-scan-page v-if="state=='page'"></advice-scan-page>
     </div>
 </template>
 <style scoped>
@@ -13,10 +13,9 @@
 
 </style>
 <script>
-
     import Bus from '../event-bus.js'
-    import scanAdviceList from './scan-advice-list.vue'
-    import scanAdvicePage from './scan-advice-page.vue'
+    import scanAdviceList from './advice-scan-list.vue'
+    import scanAdvicePage from './advice-scan-page.vue'
     export default{
         data(){
             return {
@@ -32,8 +31,8 @@
         },
         methods: {},
         components: {
-            'scan-advice-list': scanAdviceList,
-            'scan-advice-page': scanAdvicePage
+            'advice-scan-list': scanAdviceList,
+            'advice-scan-page': scanAdvicePage
         }
     }
 </script>

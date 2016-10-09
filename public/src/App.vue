@@ -8,15 +8,15 @@
             <!--登录-->
             <login-page v-if="state=='login'"></login-page>
             <!--添加/删除新闻-->
-            <manage-news v-if="state=='already'"></manage-news>
+            <news-manage v-if="state=='already'"></news-manage>
             <!--浏览-->
-            <scan-news-list v-if="state=='scan'"></scan-news-list>
+            <news-scan-list v-if="state=='scan'"></news-scan-list>
             <!--首页-->
             <template v-if="state==''">
                 <main-container></main-container>
             </template>
-            <post-advice v-if="state=='advice'"></post-advice>
-            <scan-advice v-if="state=='advice-list'"></scan-advice>
+            <advice-post v-if="state=='advice'"></advice-post>
+            <advice-scan v-if="state=='advice-list'"></advice-scan>
         </div>
         <main-foot></main-foot>
     </div>
@@ -27,11 +27,11 @@
     import mainContainer from './components/main-container.vue'
     import mainFoot from './components/main-foot.vue'
     import login from './components/login.vue'
-    import manageNews from './components/manage-news.vue'
+    import manageNews from './components/news-manage.vue'
     import newsView from './components/news-view.vue'
-    import scanNewsList from './components/scan-news-list.vue'
-    import advice from './components/post-advice.vue'
-    import scanAdvice from './components/scan-advice.vue'
+    import scanNewsList from './components/news-scan-list.vue'
+    import advice from './components/advice-post.vue'
+    import scanAdvice from './components/advice-scan.vue'
 
     export default {
         data(){
@@ -42,7 +42,6 @@
             }
         },
         created: function () {
-            console.log(this);
             var self = this;
             Bus.$on("setNewsId", function () {
                 self.newsview = true;
@@ -57,11 +56,11 @@
             'main-container': mainContainer,
             'main-foot': mainFoot,
             'login-page': login,
-            'manage-news': manageNews,
+            'news-manage': manageNews,
             'news-view': newsView,
-            'scan-news-list': scanNewsList,
-            'post-advice': advice,
-            'scan-advice': scanAdvice
+            'news-scan-list': scanNewsList,
+            'advice-post': advice,
+            'advice-scan': scanAdvice
         }
     }
 </script>

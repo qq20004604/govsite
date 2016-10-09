@@ -152,8 +152,8 @@
                 this.loadNews(obj, true);
             },
             newsView: function (id) {
-                this.app.state = 'page';
                 Bus.setScanAdviceId(id);
+                Bus.$emit("setScanAdviceState", 'page');
             },
             watchFilter: function () {
                 var self = this;
