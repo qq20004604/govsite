@@ -12,10 +12,17 @@ router.get('/', function (req, res, next) {
         LoadAdvice(str, [req.query.id], function (err, result) {
             if (result) { //如果第二个参数存在，说明用户名重复了，返回提示
                 //需要对结果进行处理
-                return res.send({
-                    code: 200,
-                    data: result
-                });
+                if (result[0].tel == req.query.tel) {
+                    return res.send({
+                        code: 200,
+                        data: result
+                    });
+                } else {
+                    return res.send({
+                        code: 400,
+                        data: 'error tel number'
+                    });
+                }
             }
             if (err) {  //如果报错，返回报错信息
                 console.log(err);

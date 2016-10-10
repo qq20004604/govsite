@@ -3,6 +3,43 @@
         <div class="col-md-12">
             <div class="page-title">浏览反馈</div>
         </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="form-group" :class="{'has-error':search.idEmpty, 'has-feedback':search.idEmpty}">
+                    <label class="col-md-3 control-label">查询编号</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" v-model="search.id"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="row">
+                <div class="form-group" :class="{'has-error':search.telEmpty, 'has-feedback':search.telEmpty}">
+                    <label class="col-md-3 control-label">电话号码</label>
+                    <div class="col-md-9">
+                        <input type="text" class="form-control" v-model="search.tel"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="btn-group">
+                <button type="button" class="btn btn-primary search-btn" v-if="!search.isSearching"
+                        @click="loadAdviceById">查 询
+                </button>
+                <button type="button" class="btn btn-info search-btn" v-if="search.isSearching">查询中</button>
+                <button type="button" class="btn btn-warning search-btn" @click="clearSearchInput">清 空</button>
+            </div>
+        </div>
+        <div class="col-md-12" v-if="search.error!==''">
+            <div class="alert alert-warning" v-if="search.error=='errorid'">
+                您输入的编号错误，没有查询到内容
+            </div>
+            <div class="alert alert-warning" v-if="search.error=='errortel'">
+                您输入的电话号码错误
+            </div>
+        </div>
         <div class="col-md-12" v-if="app.haveLogined">
             <div class="row">
                 <div class="col-md-4">
@@ -28,13 +65,17 @@
                     </div>
                 </div>
             </template>
-            <button v-if="canRefresh" class="btn btn-primary" @click="refresh">
-                <span v-if="advices.length>0">点击加载更多内容</span>
-                <span v-else>点击重新加载内容</span>
-            </button>
-            <button v-else class="btn btn-warning">刷新中……</button>
-            <div v-if="error=='error'" class="alert alert-danger">
-                新闻加载失败
+            <div class="btn-list">
+                <template v-if="!search.SearchingById">
+                    <button v-if="canRefresh" class="btn btn-primary" @click="refresh">
+                        <span v-if="advices.length>0">点击加载更多内容</span>
+                        <span v-else>点击重新加载内容</span>
+                    </button>
+                    <button v-else class="btn btn-warning">刷新中……</button>
+                </template>
+                <div v-if="error=='error'" class="alert alert-danger">
+                    新闻加载失败
+                </div>
             </div>
             <div v-if="error=='noMoreNews'" class="alert alert-warning">
                 没有更多内容了
@@ -67,7 +108,7 @@
         color: red;
     }
 
-    .btn {
+    .btn-list {
         margin-top: 20px;
         margin-left: 20px;
     }
@@ -82,6 +123,16 @@
         text-decoration: underline;
         cursor: pointer;
     }
+
+    .form-group, .btn-group {
+        height: 34px;
+        line-height: 34px;
+    }
+
+    .search-btn {
+        width: 80px;
+        font-weight: 900;
+    }
 </style>
 <script>
     import Bus from '../event-bus.js'
@@ -94,7 +145,16 @@
                 canRefresh: true,
                 app: Bus.getAppComponent(),
                 nowNewsCount: 0,
-                howMuchNewsOnceGet: 20
+                howMuchNewsOnceGet: 20,
+                search: {
+                    id: "",
+                    tel: "",
+                    error: "",
+                    isSearching: false,
+                    idEmpty: false,
+                    telEmpty: false,
+                    SearchingById: false
+                }
             }
         },
         created: function () {
@@ -119,7 +179,7 @@
                         }
                     }
                 }
-                console.log(postData);
+//                console.log(postData);
                 $.ajax({
                     url: "/loadAdvice",
                     type: "get",
@@ -148,6 +208,9 @@
                             self.nowNewsCount += result.data.length;
                         }
                     }
+                }).fail(function () {
+                    self.error = 'error';
+                    self.advices = [];
                 })
             },
             refresh: function () {
@@ -202,6 +265,75 @@
                         }
                         self.loadNews(postData, true);
                     }
+                })
+            },
+            //清除查询的输入框
+            clearSearchInput: function () {
+                this.search = {
+                    id: "",
+                    tel: "",
+                    error: "",
+                    isSearching: false,
+                    idEmpty: false,
+                    telEmpty: false,
+                    SearchingById: false
+                };
+            },
+            //根据输入框内容发起ajax请求
+            loadAdviceById: function () {
+                //先检测输入内容
+                this.search.idEmpty = false;
+                this.search.telEmpty = false;
+                if (this.search.id.length === 0) {
+                    this.search.idEmpty = true;
+                }
+                if (this.search.tel.length === 0 || this.search.tel.length > 12) {
+                    this.search.telEmpty = true;
+                }
+                if (this.search.idEmpty || this.search.telEmpty) {
+                    return;
+                }
+                //设置发送内容
+                var postData = {
+                    id: this.search.id,
+                    tel: this.search.tel
+                }
+                this.search.isSearching = true;
+                this.search.SearchingById = true;
+                var self = this;
+                //发起请求
+                $.ajax({
+                    url: "/loadAdvice",
+                    type: "get",
+                    dataType: "json",
+                    data: postData
+                }).done(function (result) {
+                    console.log(result);
+                    self.search.isSearching = false;
+                    if (result.code === 501) {
+                        self.search.error = 'errorid'
+                        setTimeout(function () {
+                            self.search.error = '';
+                        }, 5000)
+                        return;
+                    } else if (result.code === 400) {
+                        self.search.error = 'errortel';
+                        setTimeout(function () {
+                            self.search.error = '';
+                        }, 5000)
+                    } else if (result.code !== 200) {
+                        self.error = 'error';
+                        self.advices = [];
+                    } else {
+                        self.error = '';
+                        self.search.error = '';
+                        self.nowNewsCount = 0;
+                        self.advices = result.data;
+                    }
+                }).fail(function () {
+                    self.search.isSearching = false;
+                    self.error = 'error';
+                    self.advices = [];
                 })
             }
         }
