@@ -18,7 +18,8 @@
         <div class="col-md-12">
             <template v-if="error==''||error=='noMoreNews'" v-for="item in advices">
                 <div class="row">
-                    <div class="col-md-1 type">【已解决】</div>
+                    <div class="col-md-1 haveResponsed" v-if="item.mtime!='0'">【已解决】</div>
+                    <div class="col-md-1 notResponsed" v-if="item.mtime=='0'">【未解决】</div>
                     <div class="col-md-9 text">
                         <span @click="newsView(item.id)">{{item.title}}</span>
                     </div>
@@ -56,9 +57,14 @@
         margin-bottom: 10px;
     }
 
-    .type {
+    .haveResponsed {
         white-space: nowrap;
         color: green;
+    }
+
+    .notResponsed {
+        white-space: nowrap;
+        color: red;
     }
 
     .btn {
@@ -98,15 +104,28 @@
         methods: {
             loadNews: function (data, newAjax) {
                 var self = this;
+                var postData = null;
+                if (data) {
+                    postData = data;
+                } else {
+                    postData = {
+                        area: [self.nowNewsCount, self.howMuchNewsOnceGet]
+                    };
+                    if (this.app.haveLogined) {
+                        if (this.filter === 'notResponsed') {
+                            postData.haveResponse = false;
+                        } else if (this.filter === 'haveLogined') {
+                            postData.haveResponse = true;
+                        }
+                    }
+                }
+                console.log(postData);
                 $.ajax({
                     url: "/loadAdvice",
                     type: "get",
                     dataType: "json",
-                    data: data ? data : {
-                        area: [self.nowNewsCount, self.howMuchNewsOnceGet]
-                    }
+                    data: postData
                 }).done(function (result) {
-//                    console.log(result);
                     if (result.code === 501) {
                         self.error = 'noMoreNews';
                         self.advices = [];
@@ -143,13 +162,18 @@
                 }, 3000);
 
                 //重新加载要从第0个开始加载，判断当前类型不是all的话，则需要加类型判断来加载
-                var obj = {
+                var postData = {
                     area: [0, self.howMuchNewsOnceGet]
                 };
-                if (this.filter !== 'all') {
-                    obj.type = this.filter;
+
+                if (this.app.haveLogined) {
+                    if (this.filter === 'notResponsed') {
+                        postData.type = false;
+                    } else if (this.filter === 'haveLogined') {
+                        postData.type = true;
+                    }
                 }
-                this.loadNews(obj, true);
+                this.loadNews(postData, true);
             },
             newsView: function (id) {
                 Bus.setScanAdviceId(id);
@@ -165,11 +189,18 @@
                         }, true);
                         return;
                     } else {
-                        self.loadNews({
+                        var postData = {
                             area: [0, self.howMuchNewsOnceGet],
-                            haveText: false,
-                            type: newVal
-                        }, true);
+                            haveText: false
+                        };
+                        if (this.app.haveLogined) {
+                            if (newVal === 'notResponsed') {
+                                postData.haveResponse = false;
+                            } else if (newVal === 'haveResponsed') {
+                                postData.haveResponse = true;
+                            }
+                        }
+                        self.loadNews(postData, true);
                     }
                 })
             }

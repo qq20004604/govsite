@@ -25,8 +25,7 @@
 </template>
 <style scoped>
     .row {
-        margin-left: 0;
-        margin-right: 0;
+        margin: 0;
     }
 
     .main {

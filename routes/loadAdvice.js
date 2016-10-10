@@ -34,7 +34,7 @@ router.get('/', function (req, res, next) {
     var arr = [];   //这个是查询的参数
     // *****  area/haveResponse  *****
     if (req.query.area instanceof Array) {
-        if (req.query.haveResponse === 'true') {    //已回复
+        if (req.query.haveResponse === 'true' || !req.session.user) {    //已回复
             str += ' where mtime > 0';
         }
         else if (req.query.haveResponse === 'false') {  //未回复
