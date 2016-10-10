@@ -4,7 +4,7 @@
             <div class="page-title">浏览反馈</div>
         </div>
         <div class="col-md-4">
-            <div class="row">
+            <div class="row rowFormat">
                 <div class="form-group" :class="{'has-error':search.idEmpty, 'has-feedback':search.idEmpty}">
                     <label class="col-md-3 control-label">查询编号</label>
                     <div class="col-md-9">
@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="col-md-4">
-            <div class="row">
+            <div class="row rowFormat">
                 <div class="form-group" :class="{'has-error':search.telEmpty, 'has-feedback':search.telEmpty}">
                     <label class="col-md-3 control-label">电话号码</label>
                     <div class="col-md-9">
@@ -41,7 +41,7 @@
             </div>
         </div>
         <div class="col-md-12" v-if="app.haveLogined">
-            <div class="row">
+            <div class="row rowFormat">
                 <div class="col-md-4">
                     文章类型筛选：
                     <select v-model="filter">
@@ -54,7 +54,7 @@
         </div>
         <div class="col-md-12">
             <template v-if="error==''||error=='noMoreNews'" v-for="item in advices">
-                <div class="row">
+                <div class="row rowFormat">
                     <div class="col-md-1 haveResponsed" v-if="item.mtime!='0'">【已解决】</div>
                     <div class="col-md-1 notResponsed" v-if="item.mtime=='0'">【未解决】</div>
                     <div class="col-md-9 text">
@@ -98,6 +98,11 @@
         margin-bottom: 10px;
     }
 
+    .rowFormat {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
     .haveResponsed {
         white-space: nowrap;
         color: green;
@@ -124,14 +129,38 @@
         cursor: pointer;
     }
 
-    .form-group, .btn-group {
-        height: 34px;
-        line-height: 34px;
-    }
-
     .search-btn {
         width: 80px;
         font-weight: 900;
+    }
+
+    @media (min-width: 992px) {
+        .col-md-3 {
+            padding-right: 0;
+        }
+
+        .form-group, .btn-group {
+            height: 34px;
+            line-height: 34px;
+        }
+    }
+
+    @media (min-width: 1200px) {
+        .col-md-3 {
+            padding-right: 15px;
+        }
+    }
+
+    @media (max-width: 992px) {
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .btn-group {
+            margin-bottom: 20px;
+            padding-left: 15px;
+            padding-right: 15px;
+        }
     }
 </style>
 <script>
