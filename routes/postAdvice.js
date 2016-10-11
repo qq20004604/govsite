@@ -76,7 +76,7 @@ function SaveAdvice(str, arr, callback) {       // 这是一个User类，传递�
                 return callback(err, null);
             }
             selectResult = result;  //这里的result是一个数组，只包含一个元素（或者是空）
-            if (selectResult.insertId) {  //查询到的话，数组是有元素的（即length > 0）
+            if (selectResult.insertId || selectResult.changedRows) {  //查询到的话，数组是有元素的（即length > 0）
                 return callback(null, selectResult) //这里的selectResult就是user对象，包含name和password属性
             } else {
                 return callback(null, null);    //如果查询不到，两个参数都为空

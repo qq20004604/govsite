@@ -5,6 +5,22 @@
         </h2>
         <div class="btn-group backBtn">
             <button type="button" class="btn btn-primary" @click="backToList">返回列表</button>
+            <button type="button" class="btn btn-primary" style="margin-left:20px" @click="setCanEdit"
+                    v-if="app.haveLogined && !editing">编辑回复内容
+            </button>
+            <button type="button" class="btn btn-info" style="margin-left:20px" @click="submit"
+                    v-if="app.haveLogined && editing">提交回复内容
+            </button>
+        </div>
+        <div class="row" v-if="postState!==''">
+            <div class="col-md-12">
+                <div class="alert alert-danger" v-if="postState=='error'">
+                    提交失败
+                </div>
+                <div class="alert alert-success" v-if="postState=='success'">
+                    提交成功
+                </div>
+            </div>
         </div>
         <form class="form-horizontal" role="form">
             <div class="form-group">
@@ -46,13 +62,19 @@
             <div class="form-group">
                 <label class="col-sm-1 control-label">回复内容</label>
                 <div class="col-sm-10">
-                    <textarea class="form-control" rows="15" v-model="advice.text" disabled></textarea>
+                    <textarea class="form-control" rows="15" v-model="advice.response" name="response"
+                              disabled></textarea>
                 </div>
             </div>
         </form>
     </div>
 </template>
 <style scoped>
+    .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
     .background {
         padding-bottom: 20px;
         background-color: white;
@@ -84,7 +106,10 @@
                     ctime: "读取中",
                     mtime: "读取中",
                     response: "读取中"
-                }
+                },
+                editing: false,
+                app: Bus.getAppComponent(),
+                postState: ""
             }
         },
         created: function () {
@@ -104,7 +129,11 @@
                     if (result.code === 200) {
                         self.advice = result.data[0];
                         self.advice.ctime = new Date(Number(self.advice.ctime)).Format("yyyy-MM-dd hh:mm:ss");
-                        self.advice.mtime = new Date(Number(self.advice.mtime)).Format("yyyy-MM-dd hh:mm:ss");
+                        if (self.advice.mtime == 0) {
+                            self.advice.mtime = "未回复"
+                        } else {
+                            self.advice.mtime = new Date(Number(self.advice.mtime)).Format("yyyy-MM-dd hh:mm:ss");
+                        }
                     } else {
 
                     }
@@ -114,11 +143,43 @@
             },
             backToList: function () {
                 Bus.$emit("setScanAdviceState", "list");
+            },
+            setCanEdit: function () {
+                this.postState = '';
+                var node = this.$el.querySelector('textarea[name=response]');
+                node.disabled = false;
+                this.editing = true;
+            },
+
+            submit: function () {
+                var self = this;
+                var node = this.$el.querySelector('textarea[name=response]');
+                node.disabled = true;
+                this.editing = false;
+                console.log({
+                    id: self.advice.id,
+                    response: self.advice.text
+                })
+                $.ajax({
+                    url: "/postAdvice",
+                    type: "post",
+                    dataType: "json",
+                    data: {
+                        id: self.advice.id,
+                        response: self.advice.response
+                    }
+                }).done(function (result) {
+                    console.log(result);
+                    if (result.code === 200) {
+                        self.postState = 'success';
+                        self.advice.mtime = "已回复"
+                    } else {
+                        self.postState = 'error';
+                    }
+                }).fail(function () {
+                    self.postState = 'error';
+                })
             }
-        },
-        components: {
-            //'other-component':OtherComponent,
-            //HeaderComponent,
         }
     }
 </script>

@@ -10,9 +10,9 @@ router.get('/', function (req, res, next) {
     if (req.query.id && Number(req.query.id) > 0) {
         str += ' where id = ?';
         LoadAdvice(str, [req.query.id], function (err, result) {
-            if (result) { //如果第二个参数存在，说明用户名重复了，返回提示
-                //需要对结果进行处理
-                if (result[0].tel == req.query.tel) {
+            if (result) {
+                //需要对结果进行处理，要么电话号码符合，要么已登录状态才能查看
+                if (result[0].tel == req.query.tel || req.session.user || result[0].mtime > 0) {
                     return res.send({
                         code: 200,
                         data: result
@@ -36,6 +36,7 @@ router.get('/', function (req, res, next) {
                 data: "no more things"
             })
         });
+        return;
     }
 
     var arr = [];   //这个是查询的参数
@@ -81,6 +82,11 @@ router.get('/', function (req, res, next) {
                     data: "no more things"
                 })
             })
+    } else {
+        return res.send({
+            code: 500,
+            data: "error infomation"
+        });
     }
 })
 
