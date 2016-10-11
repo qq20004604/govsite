@@ -84,4 +84,10 @@
     #app {
         padding: 0;
     }
+
+    @media (max-width: 992px) {
+        body {
+            overflow-x: hidden;
+        }
+    }
 </style>

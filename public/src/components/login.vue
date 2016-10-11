@@ -34,11 +34,7 @@
     }
 
     .form {
-        margin: 20px 0;
-    }
-
-    .bg-danger, .bg-success {
-        margin-bottom: 20px;
+        padding: 20px 0;
     }
 </style>
 <script>
