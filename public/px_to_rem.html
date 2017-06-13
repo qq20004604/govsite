@@ -1,0 +1,63 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>px转换为rem</title>
+    <script src="../listenError.js"></script>
+</head>
+<body>
+<style>
+    textarea {
+        height: 300px;
+        width: 300px;
+    }
+</style>
+<h3>px — rem转换：</h3>
+<p>支持程度：<br>1、类似cssStyle: 100px;这种;<br>2、font: 20px solid;<br>3、padding: 0 10px;<br>注意，css属性和实际值中间有一个空格才可以转换。</p>
+<p><span>转换前单位(例如：</span><input id="before"></p>
+<p><span>转换后格式：</span><input id="after"></p>
+<p><span>转换比例（如0.5表示将原值折半）：</span><input id="percent"></p>
+<textarea id="in" onblur="computed()" onfocus="clear()"></textarea>
+<textarea id="out"></textarea>
+<script>
+    document.querySelector("#before").value = "px";
+    document.querySelector("#after").value = "rem";
+    document.querySelector("#percent").value = "0.05";
+    function clear() {
+        document.querySelector("#in").value = '';
+    }
+
+    function computed() {
+        var be = document.querySelector("#before").value;
+        var af = document.querySelector("#after").value;
+        var pe = document.querySelector("#percent").value;
+
+
+        var val = document.querySelector("#in").value;
+//        if (be.length > 0) {
+        var reg = new RegExp("\\s[0-9]+([.]?[0-9]+)?(" + be + ")", "g");
+        val = val.replace(reg, function (item) {
+            var num = item.match(/[0-9]+/);
+            if (af.length > 0) {
+                return " " + (num * (pe.length > 0 ? parseFloat(pe) : 0.6) ) + af + "";
+            } else {
+                return " " + (num * 0.6) + "rem";
+            }
+        });
+//        } else {
+//            val = val.replace(/:\s[0-9]+([.]?[0-9]+)?(px);/g, function (item) {
+//                var num = item.match(/[0-9]+/);
+//                return ":" + (num * 0.6) + "rem;";
+//            });
+//        }
+
+        console.log(val);
+        document.querySelector("#out").value = val;
+        document.querySelector("#out").focus();
+    }
+</script>
+</body>
+</html>
