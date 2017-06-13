@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8"/>
+    <style>
+        #Box_Background {
+            position: absolute;
+            top: 300px;
+            left: 500px;
+            width: 300px;
+            height: 300px;
+            border: 1px solid #aaa;
+            perspective: 500px;
+            perspective-origin: 50% 50%;
+        }
+
+        .Box {
+            position: absolute;
+            top: 100px;
+            left: 100px;
+            width: 100px;
+            height: 100px;
+            text-align: center;
+            transform-style: preserve-3d;
+        }
+
+        .Box .surface {
+            position: absolute;
+            border: 1px solid black;
+            width: 100px;
+            height: 100px;
+            line-height: 100px;
+            text-align: center;
+        }
+
+        @keyframes top {
+            0% {
+            }
+            100% {
+                transform: rotateX(90deg) translateZ(50px)
+            }
+        }
+
+        @keyframes bottom {
+            0% {
+            }
+            100% {
+                transform: rotateX(-90deg) translateZ(50px)
+            }
+        }
+
+        @keyframes left {
+            0% {
+            }
+            100% {
+                transform: rotateY(-90deg) translateZ(50px)
+            }
+        }
+
+        @keyframes right {
+            0% {
+            }
+            100% {
+                transform: rotateY(90deg) translateZ(50px)
+            }
+        }
+
+        @keyframes front {
+            0% {
+            }
+            100% {
+                transform: translateZ(50px)
+            }
+        }
+
+        @keyframes back {
+            0% {
+            }
+            100% {
+                transform: translateZ(-50px) rotateY(180deg)
+            }
+        }
+
+        @keyframes all {
+            0% {
+            }
+            100% {
+                transform: rotate3d(1, 1, 1, 360deg)
+            }
+        }
+
+        @keyframes pp {
+            0% {
+
+            }
+        }
+
+        .Box .top {
+            animation: top 1s both;
+        }
+
+        .Box:hover .top {
+            background: red;
+        }
+
+        .Box .bottom {
+            animation: bottom 1s both 1s;
+        }
+
+        .Box:hover .bottom {
+            background: blue;
+        }
+
+        .Box .left {
+            animation: left 1s both 2s;
+        }
+
+        .Box:hover .left {
+            background: green;
+        }
+
+        .Box .right {
+            animation: right 1s both 3s;
+        }
+
+        .Box .Box:hover .right {
+            background: yellow;
+        }
+
+        .Box .back {
+            animation: back 1s both 4s;
+        }
+
+        .Box:hover .back {
+            background: pink;
+        }
+
+        .Box .front {
+            animation: front 1s both 5s;
+        }
+
+        .Box:hover .front {
+            background: GreenYellow;
+        }
+
+        .Box {
+            animation: all 3s both infinite 6s linear;
+        }
+    </style>
+</head>
+<body>
+<div id="Box_Background">
+    <div class="Box">
+        <div class="surface top">
+            top
+        </div>
+        <div class="surface bottom">
+            bottom
+        </div>
+        <div class="surface left">
+            left
+        </div>
+        <div class="surface right">
+            right
+        </div>
+        <div class="surface back">
+            back
+        </div>
+        <div class="surface front">
+            front
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>
