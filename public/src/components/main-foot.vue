@@ -1,7 +1,7 @@
 <template>
     <footer class="foot">
-        <h4 class="text-center">西安市临潼区北田街道办事处</h4>
-        <h4 class="text-center">联系电话：029-83989005</h4>
+        <h4 class="text-center">{{msg}}</h4>
+        <h4 class="text-center">联系电话：XXXX</h4>
     </footer>
 </template>
 <style scoped>
@@ -20,7 +20,7 @@
     export default{
         data(){
             return {
-                msg: 'hello vue'
+                msg: "街道办事处"
             }
         },
         components: {}

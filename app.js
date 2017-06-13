@@ -52,6 +52,9 @@ app.use("/postAdvice", postAdvice);
 //查看反馈
 var loadAdvice = require("./routes/loadAdvice");
 app.use("/loadAdvice", loadAdvice);
+//错误日志存储
+var saveError = require("./routes/saveError");
+app.use("/saveError", saveError);
 
 
 // catch 404 and forward to error handler

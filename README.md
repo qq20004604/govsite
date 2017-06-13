@@ -15,9 +15,11 @@ http://jianwangsan.cn/
 
     npm install -g vue-cli
 
-然后在根目录下和public文件夹下，分别输入
+然后在根目录下和public文件夹下（确认你克隆了全部文件），分别输入
 
-    npm start
+    npm install
+    
+或者直接运行```安装.bat```也可以，但前面全局安装vue-cli的命令还是要自己输入，否则容易出错。
     
 应该就ok了。
     

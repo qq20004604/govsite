@@ -30,6 +30,6 @@ Vue.filter("formatTime", function (value) {
 })
 
 new Vue({ // eslint-disable-line no-new
-  el: '#app',
-  render: (h) => h(App)
+    el: '#app',
+    render: (h) => h(App)
 })
