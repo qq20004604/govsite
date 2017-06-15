@@ -1,0 +1,15 @@
+#chat-room {
+    height: 400px;
+    width: 600px;
+    border: 1px solid black;
+    overflow: auto;
+}
+
+#chat-room h3 {
+    width: 100%;
+    text-align: center;
+}
+
+#chat-room li {
+    text-align: left;
+}

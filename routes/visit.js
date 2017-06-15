@@ -1,12 +1,13 @@
 ﻿var express = require('express'); // 调用express模块
-var db = require('../models/db');
 var router = express.Router();  // 调用模块的Router方法
-var fun = require('../models/fun')
+var db = require('../models/db');
+var fun = require('../models/fun');
 
-router.get("/:anyurl", function (req, res, next) {
-    //排除loadnews请求
-    if (req.params.anyurl.indexOf("loadnews") !== 0) {
-        var record = new VisitsRecord(req.connection.remoteAddress, "/" + req.params.anyurl);
+router.all("/*", function (req, res, next) {
+    var url = "/" + req.params[0];
+    //如果后缀名不是以下，则记录ip
+    if (!/\.(css|js|png|jpg|json|jpeg|ico)$/.test(url)) {
+        var record = new VisitsRecord(fun.getIP(req), url);
         record.save();
     }
     next();

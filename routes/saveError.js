@@ -35,7 +35,7 @@ router.post('/', function (req, res, next) {
             error: req.body.error,
             url: req.body.url,
             useragent: fun.getUserAgent(req, "User-Agent"),
-            ip: req.ip.match(/\d+\.\d+\.\d+\.\d+/)
+            ip: fun.getIP()
         },
         function (err, result) {
             if (result) {   //有结果

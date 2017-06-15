@@ -7,7 +7,7 @@
 var app = require('../app');
 var debug = require('debug')('gov:server');
 var http = require('http');
-var socket = require('../models/socketIO');
+var socket = require('../socket.IO/socketIO');
 
 /**
  * Get port from environment and store in Express.
