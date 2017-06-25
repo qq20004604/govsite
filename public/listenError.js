@@ -1,10 +1,10 @@
 ﻿/*Created by 王冬 on 2017/6/11.
-* 简单来说，这个js文件会将页面的错误捕获，然后发送到服务器。
-* 发送的url是：/saveError
-* 发送的方式是：post
-* 有必要的话可以修改window.onerror里面的config变量进行配置。
-* 直接在页面里引入本文件即可。
-* */
+ * 简单来说，这个js文件会将页面的错误捕获，然后发送到服务器。
+ * 发送的url是：/saveError
+ * 发送的方式是：post
+ * 有必要的话可以修改window.onerror里面的config变量进行配置。
+ * 直接在页面里引入本文件即可。
+ * */
 (function (ajax) {
     //冲突处理，默认通过$.ajax来调用，但是如果启用了jquery或者之类的，导致$.ajax有内容存在，那么则使用$ajax来调用
     if (typeof window.$ === "object" && window.$.ajax) {
@@ -222,18 +222,14 @@
     //最终返回obj对象
     return obj;
 })
-window.onerror = function (errorMessage, scriptURI, lineNumber, columnNumber, errorObj) {
+
+//错误信息发送函数
+function sendErrorToServer(info) {
     var config = {
         postUrl: "/saveError",
         postType: "post"
-    }
+    };
 
-    var info = "错误信息：" + errorMessage + "</br>" +
-        "出错文件：" + scriptURI + "</br> " +
-        "出错行号：" + lineNumber + "</br>" +
-        "出错列号：" + columnNumber + "</br>" +
-        "错误详情：" + errorObj + "</br></br>";
-//        console.log(info);
     $.ajax({
         url: config.postUrl,
         type: config.postType,
@@ -244,5 +240,14 @@ window.onerror = function (errorMessage, scriptURI, lineNumber, columnNumber, er
     }).done(function (result) {
 
     })
-    return true;
+}
+
+window.onerror = function (errorMessage, scriptURI, lineNumber, columnNumber, errorObj) {
+    var info = "错误信息：" + errorMessage + "</br>" +
+        "出错文件：" + scriptURI + "</br> " +
+        "出错行号：" + lineNumber + "</br>" +
+        "出错列号：" + columnNumber + "</br>" +
+        "错误详情：" + errorObj + "</br></br>";
+    sendErrorToServer(info);
+    return false;
 }

@@ -55,17 +55,9 @@
 
 //建立连接后的初始化
 function startEvent(socket) {
-    //延迟一秒拉倒，反正各种奇怪的问题……比如说初始化时更新姓名然后失败的
-    //推断是因为在建立连接后可能还有点什么情况，我也不太确定。
-    setTimeout(function () {
-        //告诉服务器端有要更新名字了
-        var name = getName();
-        socket.emit('updateName', {
-            name: name
-        });
-    }, 1000);
 
     $("#user-name").innerHTML = "无名氏";
+
 }
 
 
@@ -107,6 +99,23 @@ function clickEvent(socket) {
 
 //事件监听
 function listenEvent(socket) {
+    //监听登录成功的反馈
+    socket.on("connection-success", function (msg) {
+        if (msg.code === '200') {
+            //告诉服务器端有要更新名字了
+            var name = getName();
+            socket.emit('updateName', {
+                name: name
+            });
+
+            var li = document.createElement("li");
+            li.innerHTML = "系统消息：" + msg.date + "你连接到服务器！";
+            li.style.color = "red";
+            li.style.fontWeight = "bold";
+            $("#chat-room").append(li);
+        }
+    })
+
     //监听新用户登录
     socket.on('alertToUser', function (msg) {
         var li = document.createElement("li");
@@ -128,7 +137,7 @@ function listenEvent(socket) {
     })
 
     //离开房间时收到的信息
-    socket.on("leaveGame", function (msg) {
+    socket.on("leaveRoom", function (msg) {
         var li = document.createElement("li");
         li.innerHTML = "系统消息：" + msg.msg;
         li.style.color = "blue";
@@ -160,6 +169,14 @@ function listenEvent(socket) {
         console.log(userINFO);
     })
 
+    //假如断线
+    socket.on("disconnect", function () {
+        var li = document.createElement("li");
+        li.innerHTML = "系统消息：哇！悲剧了！你断线了！";
+        li.style.color = "red";
+        li.style.fontWeight = "bold";
+        $("#chat-room").append(li);
+    })
 }
 
 // 生成随机姓名
@@ -204,3 +221,4 @@ function getName() {
 
     return familyName + givenName;
 }
+

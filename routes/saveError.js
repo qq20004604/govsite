@@ -35,7 +35,7 @@ router.post('/', function (req, res, next) {
             error: req.body.error,
             url: req.body.url,
             useragent: fun.getUserAgent(req, "User-Agent"),
-            ip: fun.getIP()
+            ip: fun.getIP(req)
         },
         function (err, result) {
             if (result) {   //有结果
@@ -63,7 +63,7 @@ function saveErrorToSQL(data, callback) {
     var selectResult;
     db.con(function (connect) {
         connect.query("INSERT errorlog (ctime, url, errorMessage, useragent, ip) values(?, ?, ?, ?, ?)", [
-                fun.getNowTime(),
+                fun.getNowDate(),
                 data.url,
                 data.error,
                 data.useragent,

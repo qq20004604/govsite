@@ -4,10 +4,15 @@
 //一些公有函数
 //下划线开头的是私有函数
 'use strict'
-//格式化时间
+//格式化时间 年-月-日 时:分:秒
 let formatDate = function (date) {
     return date.getFullYear() + "-" + addZero(date.getMonth() + 1, 2) + "-" + addZero(date.getDate(), 2) + " " +
         addZero(date.getHours(), 2) + ":" + addZero(date.getMinutes(), 2) + ":" + addZero(date.getSeconds(), 2);
+}
+
+//格式化时间 时:分:秒
+let formateTime = function (date) {
+    return addZero(date.getHours(), 2) + ":" + addZero(date.getMinutes(), 2) + ":" + addZero(date.getSeconds(), 2);
 }
 
 //在字符串开始补足0
@@ -66,12 +71,19 @@ function getName() {
 }
 
 module.exports = {
-    //获取当前时间
-    getNowTime() {
-        return formatDate(new Date());
+    //获取当前时间2000-01-01 00:00:00
+    getNowDate(date) {
+        return formatDate(date ? new Date(date) : new Date());
+    },
+    //获取当前时间00:00:00
+    getNowTime(date){
+        return formateTime(date ? new Date(date) : new Date());
     },
     //获取user-agent
     getUserAgent(req, key){
+        if (typeof key === 'undefined') {
+            key = "User-Agent";
+        }
         if (Object.prototype.toString.call(req.rawHeaders) === "‌[object Array]") {
             return "";
         }

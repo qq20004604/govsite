@@ -25,7 +25,7 @@ function VisitsRecord(ip, url) {       // 这是一个User类，传递的参数�
 VisitsRecord.prototype.save = function () {
     var self = this;
     db.con(function (connect) {
-        connect.query('INSERT visitsrecord (ip, ctime, url) values(?,?,?)', [self.ip, fun.getNowTime(), self.URL], function (err, result) {
+        connect.query('INSERT visitsrecord (ip, ctime, url) values(?,?,?)', [self.ip, fun.getNowDate(), self.URL], function (err, result) {
             if (err) {  //报错
                 console.log("INSERT VISITSRECORD err information is: " + err);
                 return;
