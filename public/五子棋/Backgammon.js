@@ -8,14 +8,14 @@ let SETTING = {
 };
 
 //房间信息（从服务器端拉取），包括下棋信息
-let info = {
+let ROOMINFO = {
     black: "",
     white: "",
     watcher: [],
     ctime: "",
     size: 19,
     // 下棋的每一步都存在这里，索引为0的地方，是棋盘(1, 1)的位置；
-    // html标签的索引值let index = info.steps[info.steps.length - 1] + 1;
+    // html标签的索引值let index = ROOMINFO.steps[ROOMINFO.steps.length - 1] + 1;
     steps: [],
     lastWinner: "",
     gameStatus: "",     //游戏状态，original未开局，doing进行中，end已结束
@@ -23,14 +23,13 @@ let info = {
     // toStartGame: true,  //只有在【游戏刚开始】的时候才会存在这个属性，侦测到这个属性后，会去生成棋盘
 }
 
-
 //玩家信息
 let USERINFO = {
     name: "",
 };
 
 //初始化
-init();
+window.onload = init;
 
 function init() {
 
@@ -48,9 +47,6 @@ function init() {
 
     //设置socket相关的点击事件
     listenSocketEvent(socket);
-
-    //初始化
-    startEvent(socket);
 }
 
 //选择器配置
@@ -80,24 +76,17 @@ function selector() {
     }
 }
 
-
-//建立连接后的初始化
-function startEvent(socket) {
-    $("#user-name").innerText = "无名氏";
-}
-
 //设置socket相关的点击事件
 function listenSocketEvent(socket) {
     //监听登录成功的反馈
     socket.on("connection-success", function (msg) {
+        $("#user-name").innerText = "无名氏";
         if (msg.code === '200') {
             //告诉服务器端有要更新名字了
             let name = getName();
-            setTimeout(function () {
-                socket.emit('updateName', {
-                    name: name
-                });
-            }, 1000);
+            socket.emit('updateName', {
+                name: name
+            });
 
             let li = document.createElement("li");
             li.innerText = "系统消息：" + msg.date + " 你连接到服务器！";
@@ -118,7 +107,7 @@ function listenSocketEvent(socket) {
         $("#room-info").innerText = "断线中";
         $("#time").innerText = "断线中，拉取不到服务器信息";
 
-        resetInfoWhenLeaveRoom();
+        resetRoomInfo();
     })
 
     //监听普通提示（黑字）
@@ -158,7 +147,7 @@ function listenSocketEvent(socket) {
         $("#chat-room").appendChild(li);
         $("#room-info").innerHTML = "大厅";
 
-        resetInfoWhenLeaveRoom();
+        resetRoomInfo();
     })
 
     //聊天信息
@@ -195,13 +184,21 @@ function listenSocketEvent(socket) {
             $("#player-black").innerHTML = "<span class='myName'>" + roomInfo.black + "</span>";
         } else {
             //黑方
-            $("#player-black").innerText = roomInfo.black ? roomInfo.black : "【无】";
+            if (roomInfo.black) {
+                $("#player-black").innerText = roomInfo.black;
+            } else {
+                $("#player-black").innerHTML = "<span class='alert'>【无】</span>";
+            }
         }
         if (myName === roomInfo.white) {
             $("#player-white").innerHTML = "<span class='myName'>" + roomInfo.white + "</span>";
         } else {
             //白方
-            $("#player-white").innerText = roomInfo.white ? roomInfo.white : "【无】";
+            if (roomInfo.black) {
+                $("#player-white").innerText = roomInfo.white;
+            } else {
+                $("#player-white").innerHTML = "<span class='alert'>【无】</span>";
+            }
         }
         if (roomInfo.watcher.indexOf(myName) !== -1) {
             let newWatcherList = roomInfo.watcher.map(item => {
@@ -229,33 +226,33 @@ function listenSocketEvent(socket) {
         var index = stepInfo.step;
         var steps = stepInfo.steps;
         //将这一步添加到本地的下棋序列里
-        info.steps.push(index);
+        ROOMINFO.steps.push(index);
 
         //本地验证下棋步骤是否一致
         var isError = false;
         //长度是否一致
-        if (info.steps.length !== stepInfo.steps.length) {
+        if (ROOMINFO.steps.length !== stepInfo.steps.length) {
             isError = true;
-            console.error("本地下棋序列与服务器不符，服务器端该步序列长度为：" + stepInfo.steps.length + "，本地为：" + info.steps.length);
+            console.error("本地下棋序列与服务器不符，服务器端该步序列长度为：" + stepInfo.steps.length + "，本地为：" + ROOMINFO.steps.length);
         } else {
             //遍历每一步是否一致
             steps.map(function (step, i) {
                 //如果服务器返回的当前一步和客户端的不符，则移除客户端的，用服务器端的替代，并标记错误
-                if (step !== info.steps[i]) {
-                    console.error("第" + (i + 1) + "步出错，服务器端该步序列为：" + step + "，本地为：" + info.steps[i]);
+                if (step !== ROOMINFO.steps[i]) {
+                    console.error("第" + (i + 1) + "步出错，服务器端该步序列为：" + step + "，本地为：" + ROOMINFO.steps[i]);
                     isError = true;
                 }
             })
         }
         //如果发现错误，则重新生成棋盘，并按照服务器存储的棋子顺序更新
         if (isError) {
-            info.steps = stepInfo.steps;
+            ROOMINFO.steps = stepInfo.steps;
             $("#checkerboard").innerHTML = '';
-            initBoard(info);
+            initBoard(ROOMINFO);
             //注意，更新完后还是要继续下棋的，参考下面
         } else {
             //如果没错，则在该位置下棋
-            createPiece(index, info.steps.length - 1);
+            createPiece(index, ROOMINFO.steps.length - 1);
         }
         changeColor(steps);
     })
@@ -462,11 +459,11 @@ function initBoard(infoForServer) {
     $("#why-win").parentNode.style.display = "none";
 
     //棋盘的尺寸
-    info = infoForServer;
+    ROOMINFO = infoForServer;
     let size = infoForServer.size;
 
     //设置游戏结束标志为false
-    info.gameover = false;
+    ROOMINFO.gameover = false;
 
     //将棋盘置为空
     $("#checkerboard").innerHTML = "";
@@ -555,8 +552,8 @@ function createPiece(step, index) {
 
 }
 
-//离开房间后，重置棋盘、房间信息等状态
-function resetInfoWhenLeaveRoom() {
+//重置棋盘、房间信息等状态（离开房间后）
+function resetRoomInfo() {
     //隐藏掉【游戏房间】按钮，以及切换到聊天室
     $("#btn-changeToGameRoom").parentNode.style.display = "none";
     if ($("#btn-changeToChatRoom").parentNode.classList.contains("btn-blue")) {
@@ -575,11 +572,10 @@ function resetInfoWhenLeaveRoom() {
     $("#why-win").parentNode.style.display = "none";
 }
 
-
 //下棋的事件代理，避免重复绑定事件
 function checkerboardClick(evt, socket) {
     //只有下棋中的时候点击才有效
-    if (info.gameStatus !== 'doing') {
+    if (ROOMINFO.gameStatus !== 'doing') {
         return;
     }
     let dom = evt.target;
@@ -599,11 +595,12 @@ function checkerboardClick(evt, socket) {
         return;
     }
 }
+
 //判断是否可以下这一步棋
 function checkCanPutPiece(index) {
-    console.log(info.steps, index);
+    // console.log(ROOMINFO.steps, index);
     //如果之前下的其里有这一步，则不允许
-    if (info.steps.indexOf(index) > -1) {
+    if (ROOMINFO.steps.indexOf(index) > -1) {
         return false;
     } else {
         return true;
@@ -621,6 +618,7 @@ function GameOver(roomInfo) {
     $("#winner").parentNode.style.display = "";
     $("#winner").innerText = roomInfo.lastWinner;
 }
+
 //切换颜色
 function changeColor(steps) {
     if ((steps.length + 1) % 2 === 1) {
@@ -628,75 +626,4 @@ function changeColor(steps) {
     } else {
         $("#thisOrder").innerHTML = "<span style='background-color:black;color:white;display:inline-block;width:100%;'>白方</span>"
     }
-}
-/**
- * 以上是【网络版】内容
- * ——————分割线——————
- * 以下是【单机版】内容
- * */
-function old() {
-
-
-    let start = function (isCreate) {
-        let size = 0;
-        if (isCreate) {
-            //创建棋盘
-            size = Number($("#size").value);
-            info.size = size;
-        } else {
-            size = info.size
-        }
-        info.gameover = false;
-
-        $("#checkerboard").innerHTML = "";
-
-        //长宽 = size * config.imgSize单个图片尺寸
-        $("#checkerboard").style.width = size * SETTING.imgSize + "px";
-        $("#checkerboard").style.height = size * SETTING.imgSize + "px";
-
-
-        for (let i = 1; i <= size * size; i++) {
-            //四个角是|__型
-            if (i === 1) {
-                $("#checkerboard").appendChild(createBox(["two", "left-top"], i));
-            } else if (i === size) {
-                $("#checkerboard").appendChild(createBox(["two", "right-top"], i));
-            } else if (i === size * (size - 1) + 1) {
-                $("#checkerboard").appendChild(createBox(["two", "left-bottom"], i));
-            } else if (i === size * size) {
-                $("#checkerboard").appendChild(createBox(["two", "right-bottom"], i));
-            } else if (i < size) {
-                //第一排是横线T字
-                $("#checkerboard").appendChild(createBox(["three", "top"], i));
-            } else if (i > size && i < size * (size - 1) && i % size === 1) {
-                //左列
-                $("#checkerboard").appendChild(createBox(["three", "left"], i));
-            } else if (i > size && i <= size * (size - 1) && i % size === 0) {
-                //右列
-                $("#checkerboard").appendChild(createBox(["three", "right"], i));
-            } else if (i > size * (size - 1)) {
-                $("#checkerboard").appendChild(createBox(["three", "bottom"], i));
-            } else {
-                $("#checkerboard").appendChild(createBox(["four"], i));
-            }
-        }
-        //棋盘创建完毕
-
-        //初始化下棋步骤
-        info.steps = [];
-        changeColor();
-    }
-
-
-    //悔棋
-    let backPiece = function () {
-        let index = info.steps.pop();
-        let child = $(".box")[index].children[0];
-        $(".box")[index].removeChild(child);
-        changeColor(index);
-    }
-
-
-    $("#backPiece-btn").addEventListener("click", backPiece);
-
 }

@@ -3,11 +3,16 @@
  */
 var fun = require("../models/fun");
 var RoomList = require("../models/roomList");
+var socketIOModule = require('socket.io');
 
+//初始化函数
+function init(http) {
+    var io = socketIOModule(http);
+    bindEvent(io);
+}
 
-module.exports = function (http) {
-    var io = require('socket.io')(http);
-
+//事件绑定
+function bindEvent(io) {
     //在线用户
     //userSocket -> null或者{}
     /** value为对象时如下：
@@ -182,10 +187,10 @@ module.exports = function (http) {
         })
     });
 
+    //定时器
     pushRoomListInformation(io, roomList, onlineUsers);
     clearEmptyRooms(io, roomList)
     updateRoomInformationForAll(roomList);
-
 }
 
 //定时器，通报时间、在线人数，开启房间数
@@ -198,7 +203,7 @@ function pushRoomListInformation(io, roomList, onlineUsers) {
     }, delayTime);
 }
 
-//60秒清理一次空房间
+//定时器，60秒清理一次空房间
 function clearEmptyRooms(io, roomList) {
     var delayTime = 60000;
     setInterval(function () {
@@ -218,3 +223,5 @@ function updateRoomInformationForAll(roomList) {
         roomList.postEveryRoomInfoToUser();
     }, delayTime)
 }
+
+module.exports = init;
