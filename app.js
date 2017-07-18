@@ -59,6 +59,13 @@ app.use(function (err, req, res, next) {
         error: {}
     });
 });
+
+//debugger config   调试配置
+var isLog = true;
+
+//重写console.log和console.error
+require("./models/rewriteConsole")(isLog);
+
 console.log("Server start at :" + new Date());
 
 module.exports = app;
