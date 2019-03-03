@@ -4,9 +4,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var compression = require('compression')
 
 var app = express();
+// 启用gzip
+app.use(compression());
 //session
 var session = require('express-session');
 app.use(session({
@@ -26,6 +28,11 @@ app.use(cookieParser());
 
 //通过专门的路由管理文件来管理路由
 require("./routerManager")(app);
+
+/** 2017/07/18  将职位列表的页面集成到本服务中
+ *
+ */
+require("./job_routerManager")(app);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -64,7 +71,7 @@ app.use(function (err, req, res, next) {
 var isLog = true;
 
 //重写console.log和console.error
-require("./models/rewriteConsole")(isLog);
+require("./job_models/rewriteConsole")(isLog);
 
 console.log("Server start at :" + new Date());
 

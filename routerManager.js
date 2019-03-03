@@ -33,4 +33,8 @@ module.exports = function (app) {
     //错误日志存储
     var saveError = require("./routes/saveError");
     app.use("/saveError", saveError);
+
+    // 测试用
+    var html = require("./routes/html.js")
+    app.use("/index.html", html)
 }

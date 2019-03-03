@@ -1,0 +1,100 @@
+﻿extends layout_toolbox
+block content
+    link(rel='stylesheet', href='./stylesheets/toolboxes.css')
+    script(type="text/javascript",src='javascripts/toolboxes.js')
+    div 博客地址：
+        a(href='http://blog.csdn.net/qq20004604?viewmode=list' target='_blank') http://blog.csdn.net/qq20004604?viewmode=list
+        br
+        br
+    div.back
+        div.tooltop
+            div.tooltop-img
+            div.toolTab
+                div.tool#alltool
+                    span.img.alltool.select
+                    span.text    全部工具
+                    div.hover
+                div.tool#mytool
+                    span.img.mytool
+                    span.text    我的工具
+        div.contentbox
+            //下面这个是全部工具里页面最顶级的，目前共有两个，通过displayNONE这个类是否存在，来决定显示哪个
+            div.toolbox-all
+                //这个是最上面的大图标那一行
+                div.firstRow
+                    //以下是单个按钮
+                    //div.BigTool
+                    //    span.img
+                    //    span.mask
+                    //    div.text
+                    //        div.title
+                    //        div.description
+                    //    div.Button.add  添　加
+                    //    div.Button.cancel.displayNONE   取　消
+                //横线那一行，如果是多行app，应考虑使用另外一个
+                div.dotted
+                div.commonRow.title
+                div.titleRow
+                    span.titleRow-left
+                    span.titleRow-text  电脑安全
+                div.commonRow.safe
+                    //div.normalTool
+                    //    div.img
+                    //    div.text
+                    //        div.title
+                    //        div.description
+                    //    div.Button.add  添　加
+                    //    div.Button.cancel   取　消
+                div.titleRow
+                    span.titleRow-left
+                    span.titleRow-text  网络优化
+                div.commonRow.network
+                div.titleRow
+                    span.titleRow-left
+                    span.titleRow-text  系统工具
+                div.commonRow.system
+                div.titleRow
+                    span.titleRow-left
+                    span.titleRow-text  游戏优化
+                div.commonRow.game
+                div.titleRow
+                    span.titleRow-left
+                    span.titleRow-text  实用小工具
+                div.commonRow.smalltools
+            //我的工具，和之前的div.toolbox-all平级
+            div.toolbox-my.displayNONE
+                //上方区域
+                div.toolbox-content
+                    //独立按钮
+                    //div.tool-my
+                    //    div.img
+                    //    div.text    小清新日历
+                    //    div.edit-img.displayNONE
+                //下方区域
+                div.toolbox-foot
+                    //编辑按钮
+                    div.edit#edit
+                        div.img
+                        div.text    编辑
+                    //右方区域
+                    div.shortcut
+                        //左边的描述文字
+                        div.description
+                            div.text    主界面快捷入口：
+                        //右边四个按钮
+                        //div.tool-foot
+                        //    div.img
+                        //    div.text    系统急救箱
+                        //    div.edit-img.displayNONE
+                        div.tool-foot.placeholder
+                            div.placeholder-img
+                            div.text    拖拽到此
+                        div.tool-foot.placeholder
+                            div.placeholder-img
+                            div.text    拖拽到此
+                        div.tool-foot.placeholder
+                            div.placeholder-img
+                            div.text    拖拽到此
+                        div.tool-foot.placeholder
+                            div.placeholder-img
+                            div.text    拖拽到此

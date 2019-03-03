@@ -7,6 +7,7 @@
   },
   "dependencies": {
     "body-parser": "~1.15.1",
+    "compression": "^1.7.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.2.0",
     "express": "~4.13.4",
@@ -15,6 +16,7 @@
     "morgan": "~1.7.0",
     "mysql": "^2.11.1",
     "serve-favicon": "~2.3.0",
-    "socket.io": "^2.0.2"
+    "socket.io": "^2.0.2",
+    "xss": "^0.3.3"
   }
 }

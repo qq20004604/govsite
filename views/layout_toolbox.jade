@@ -1,0 +1,47 @@
+doctype html
+html
+    head
+        title #{layout.title}
+        link(rel='stylesheet', href='./stylesheets/bootstrap.min.css')
+        link(rel='stylesheet', href='./stylesheets/bootstrap-responsive.min.css')
+        link(rel='stylesheet', href='./stylesheets/global.css')
+        script(type="text/javascript",src='javascripts/jq.js')
+        script(type="text/javascript",src='javascripts/bootstrap.min.js')
+        script(type="text/javascript",src='javascripts/blog.js')
+    body
+        div.navbar.navbar-fixed-top
+            div.navbar-inner
+                div.container
+                    a.btn.btn-navbar(data-toggle="collapse",data-target=".nav-collapse")
+                        span.icon-bar
+                        span.icon-bar
+                        span.icon-bar
+                    a.brand(href="/") #{layout.topTitle}
+                    div.nav-collapse
+                        ul.nav
+                            li
+                                a(href="/") #{layout.indexButton}
+                            //以下是修改后的部分
+                            if(user())
+                                li
+                                    a(href="/logout") #{layout.logout}
+                            else
+                                li
+                                    a(href="/login") #{layout.login}
+                                li
+                                    a(href="/reg") #{layout.reg}
+                            li
+                                a(href="/language") #{layout.language}
+                            li
+                                a(href='/boxDemo') 旋转盒子
+                            li
+                                a(href='/toolbox') 仿360工具箱
+                    span.brand(style='float:right') #{layout.foot}
+        div#contrainer.container
+            - var ErrorAlert = err()
+            if(ErrorAlert)
+                div.alert.alert-error #{ErrorAlert}
+            block content
+            hr
+        fotter
+            p   #{layout.foot}

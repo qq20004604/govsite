@@ -1,0 +1,71 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>导航</title>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+创建用户：<input type="text" id="user"><br>
+访问ip地址为：所有<input type="checkbox" id="allIP">，或指定ip地址<input type="text" id="ip"><br>
+设置其密码为<input type="text" id="pw"><br>
+有权限：
+<input type="checkbox" value="insert" name="privieges">增
+<input type="checkbox" value="delete" name="privieges">删
+<input type="checkbox" value="select" name="privieges">查
+<input type="checkbox" value="update" name="privieges">改<br>
+库名：全部<input type="checkbox" id="allDatabases">，或指定库<input type="text" id="database"><br>
+表名：全部<input type="checkbox" id="allTables">，或指定表<input type="text" id="table"><br>
+<button onclick="get()">提交</button>
+<br>
+<div id="result"></div>
+<script>
+    //    $("#allIP").change(function () {
+    //        console.log($("#allIP").val())
+    //        if ($("#allIP").prop("checked")) {
+    //            $("#ip").prop("disabled", "disabled");
+    //        } else {
+    //            $("#ip").prop("disabled", "");
+    //        }
+    //    })
+
+    function whenChange(trigger, another) {
+        $(trigger).change(function () {
+            if ($(trigger).prop("checked")) {
+                $(another).prop("disabled", "disabled");
+            } else {
+                $(another).prop("disabled", "");
+            }
+        })
+    }
+    whenChange("#allIP", "#ip");
+    whenChange("#allDatabases", "#database");
+    whenChange("#allTables", "#table");
+
+
+    function get() {
+        var data = {
+            user: $("#user").val(),
+            ip: $("#allIP").prop("checked") ? "%" : $("#ip").val(),
+            pw: $("#pw").val(),
+            privieges: [],
+            database: $("#allDatabases").prop("checked") ? "*" : $("#database").val(),
+            table: $("#allTables").prop("checked") ? "*" : $("#table").val(),
+        }
+        $.each($("[name=privieges]"), function (index, item) {
+            var DOM = $(item);
+            if (DOM.prop('checked')) {
+                data.privieges.push(DOM.val());
+            }
+        })
+
+        console.log(data);
+        var str = "GRANT " + data.privieges.join(",") + " ON " + data.database + "." + data.table + " TO '" + data.user + "'@'" + data.ip + "' IDENTIFIED BY '" + data.pw + "';"
+        console.log(str);
+        $("#result").text(str);
+    }
+</script>
+
+
+</body>
+</html>

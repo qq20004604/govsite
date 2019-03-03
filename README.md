@@ -1,5 +1,5 @@
 ##DEMO地址
-http://jianwangsan.cn/
+http://185.186.147.210/index1.html
 
 登录功能的账号名和密码都是1（请不要乱操作谢谢~）
 
